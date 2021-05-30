@@ -9,7 +9,8 @@ index = {"CausalModel": "00_causalinference.ipynb",
          "ZeroShotClassifier": "01_autocoder.ipynb",
          "AutoCoder": "01_autocoder.ipynb"}
 
-modules = ["causalinference.py"]
+modules = ["causalinference.py",
+           "autocoder.py"]
 
 doc_url = "https://amaiya.github.io/causalnlp/"
 
