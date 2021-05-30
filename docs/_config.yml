@@ -1,7 +1,7 @@
 repository: amaiya/causalnlp
 output: web
-topnav_title: causalnlp
-site_title: causalnlp
+topnav_title: CausalNLP
+site_title: CausalNLP
 company_name: Arun S. Maiya
 description: CausalNLP
 # Set to false to disable KaTeX math
