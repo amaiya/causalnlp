@@ -1,13 +1,13 @@
 ---
 
-title: AutoCoder
+title: Auto Coder
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Automatically codes text fields such as open-ended survey questions."
-description: "Automatically codes text fields such as open-ended survey questions."
+summary: "Automatically codes text fields such as open-ended survey questions based on lingustic properties such as topic and sentiment."
+description: "Automatically codes text fields such as open-ended survey questions based on lingustic properties such as topic and sentiment."
 nb_path: "nbs/01_autocoder.ipynb"
 ---
 <!--
@@ -59,7 +59,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="list2chunks" class="doc_header"><code>list2chunks</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L250" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>list2chunks</code>(<strong><code>a</code></strong>, <strong><code>n</code></strong>)</p>
+<h4 id="list2chunks" class="doc_header"><code>list2chunks</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L12" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>list2chunks</code>(<strong><code>a</code></strong>, <strong><code>n</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -90,7 +90,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ZeroShotClassifier" class="doc_header"><code>class</code> <code>ZeroShotClassifier</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L256" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ZeroShotClassifier</code>(<strong><code>model_name</code></strong>=<em><code>'facebook/bart-large-mnli'</code></em>, <strong><code>device</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="ZeroShotClassifier" class="doc_header"><code>class</code> <code>ZeroShotClassifier</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ZeroShotClassifier</code>(<strong><code>model_name</code></strong>=<em><code>'facebook/bart-large-mnli'</code></em>, <strong><code>device</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>interface to Zero Shot Topic Classifier</p>
 
@@ -201,7 +201,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AutoCoder" class="doc_header"><code>class</code> <code>AutoCoder</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L356" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AutoCoder</code>(<strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="AutoCoder" class="doc_header"><code>class</code> <code>AutoCoder</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L118" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AutoCoder</code>(<strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Autocodes text fields</p>
 
@@ -222,6 +222,13 @@ nb_path: "nbs/01_autocoder.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is what the dataframe looks like before autocoding for sentiment:</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -231,8 +238,11 @@ nb_path: "nbs/01_autocoder.ipynb"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ac</span> <span class="o">=</span> <span class="n">AutoCoder</span><span class="p">()</span>
 <span class="n">reviews</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I loved this doctor!&quot;</span><span class="p">,</span> <span class="s2">&quot;This doctor was absolutely terrible.&quot;</span><span class="p">]</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">reviews</span><span class="p">)</span>
-<span class="n">result</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;review&#39;</span> <span class="p">:</span> <span class="n">reviews</span><span class="p">,</span>
+      <span class="p">})</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -245,10 +255,43 @@ nb_path: "nbs/01_autocoder.ipynb"
 <div class="output_area">
 
 
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<div class="output_text output_subarea output_execute_result">
-<pre>[[(&#39;negative&#39;, 0.005033864174038172), (&#39;positive&#39;, 0.9949660897254944)],
- [(&#39;negative&#39;, 0.9817894101142883), (&#39;positive&#39;, 0.018210623413324356)]]</pre>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>review</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>female</td>
+      <td>I loved this doctor!</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>male</td>
+      <td>This doctor was absolutely terrible.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -259,6 +302,13 @@ nb_path: "nbs/01_autocoder.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After autocoding for sentiment, the dataframe now has extra columns:</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -266,28 +316,8 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
-<span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;What is your favorite sitcom of all time?&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">custom_topic</span><span class="p">(</span><span class="n">comment</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;television&#39;</span><span class="p">,</span> <span class="s1">&#39;film&#39;</span><span class="p">,</span> <span class="s1">&#39;politics&#39;</span><span class="p">])</span>
-<span class="n">result</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">result_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -300,11 +330,49 @@ nb_path: "nbs/01_autocoder.ipynb"
 <div class="output_area">
 
 
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<div class="output_text output_subarea output_execute_result">
-<pre>[[(&#39;television&#39;, 0.9813268780708313),
-  (&#39;film&#39;, 0.012259923852980137),
-  (&#39;politics&#39;, 0.0001566773426020518)]]</pre>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>review</th>
+      <th>negative</th>
+      <th>positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>female</td>
+      <td>I loved this doctor!</td>
+      <td>0.005034</td>
+      <td>0.994966</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>male</td>
+      <td>This doctor was absolutely terrible.</td>
+      <td>0.981789</td>
+      <td>0.018211</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 
 </div>
@@ -322,10 +390,195 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;television&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
-<span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;film&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
-<span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;politics&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;female&#39;</span><span class="p">][</span><span class="s1">&#39;negative&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;female&#39;</span><span class="p">][</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;male&#39;</span><span class="p">][</span><span class="s1">&#39;negative&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;male&#39;</span><span class="p">][</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here is what the dataframe looks like before autocoding for custom, user-specified topics:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">comments</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;What is your favorite sitcom of all time?&quot;</span><span class="p">,</span> <span class="s1">&#39;I cannot wait to vote!&#39;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;over_18&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;comments&#39;</span> <span class="p">:</span> <span class="n">comments</span><span class="p">,</span>
+      <span class="p">})</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>over_18</th>
+      <th>comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>yes</td>
+      <td>What is your favorite sitcom of all time?</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>no</td>
+      <td>I cannot wait to vote!</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After autocoding, the dataframe has a new column for each custom topic:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">custom_topic</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;television&#39;</span><span class="p">,</span> <span class="s1">&#39;film&#39;</span><span class="p">,</span> <span class="s1">&#39;politics&#39;</span><span class="p">])</span>
+<span class="n">result_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>over_18</th>
+      <th>comments</th>
+      <th>television</th>
+      <th>film</th>
+      <th>politics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>yes</td>
+      <td>What is your favorite sitcom of all time?</td>
+      <td>0.981327</td>
+      <td>0.012260</td>
+      <td>0.000157</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>no</td>
+      <td>I cannot wait to vote!</td>
+      <td>0.000518</td>
+      <td>0.004943</td>
+      <td>0.936988</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;yes&#39;</span><span class="p">][</span><span class="s1">&#39;television&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;yes&#39;</span><span class="p">][</span><span class="s1">&#39;film&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;yes&#39;</span><span class="p">][</span><span class="s1">&#39;politics&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;no&#39;</span><span class="p">][</span><span class="s1">&#39;television&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;no&#39;</span><span class="p">][</span><span class="s1">&#39;film&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+<span class="k">assert</span> <span class="n">result_df</span><span class="p">[</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;over_18&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;no&#39;</span><span class="p">][</span><span class="s1">&#39;politics&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
 </pre></div>
 
     </div>

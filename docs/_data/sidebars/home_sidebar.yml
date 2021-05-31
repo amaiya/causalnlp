@@ -13,7 +13,7 @@ entries:
       title: Causal Inference
       url: causalinference.html
     - output: web,pdf
-      title: AutoCoder
+      title: Auto Coder
       url: autocoder.html
     output: web
     title: causalnlp

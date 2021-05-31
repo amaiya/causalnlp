@@ -7,6 +7,7 @@ __all__ = ['list2chunks', 'ZeroShotClassifier', 'AutoCoder']
 import math
 import warnings
 import numpy as np
+import pandas as pd
 
 def list2chunks(a, n):
     k, m = divmod(len(a), n)
@@ -126,26 +127,36 @@ class AutoCoder:
         self.zsl = ZeroShotClassifier()
 
 
+    def _format_to_df(self, results, df):
+        d = {}
+        for e in results:
+            for tup in e:
+                label = tup[0]
+                prob = tup[1]
+                lst = d.get(label, [])
+                lst.append(prob)
+                d[label] = lst
+        new_df = df.join(pd.DataFrame(d, index=df.index))
+        return new_df
 
 
-    def sentiment(self, texts, batch_size=8):
+    def sentiment(self, docs, df, batch_size=8):
         """
         Autocodes text for positive or negative sentiment
         """
-        if isinstance(texts, str): texts = [texts]
 
-        if not isinstance(texts, list): raise ValueError('texts must be a string or a list of strings')
+        results = zsl.predict(docs, labels=['negative', 'positive'], include_labels=True, multilabel=False,
+                              batch_size=batch_size,
+                              nli_template="The sentiment of this movie review is {}.")
+        return self._format_to_df(results, df)
 
-        return zsl.predict(texts, labels=['negative', 'positive'], include_labels=True, multilabel=False,
-                           batch_size=batch_size,
-                           nli_template="The sentiment of this movie review is {}.")
 
-    def custom_topic(self, texts, labels, batch_size=8):
+    def custom_topic(self, docs, df, labels, batch_size=8):
         """
         Autocodes text for user-specified topics.
         The `label` field is the name of the topic as a string (or a list of them.)
         """
-        if isinstance(texts, str): texts = [texts]
-        if not isinstance(texts, list): raise ValueError('texts must be a string or a list of strings')
 
-        return zsl.predict(texts, labels=labels, include_labels=True, batch_size=8)
+        results = zsl.predict(docs, labels=labels, include_labels=True, batch_size=8)
+        return self._format_to_df(results, df)
+
