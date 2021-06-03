@@ -8,13 +8,17 @@ pd.set_option('display.max_columns', 500)
 import time
 from causalml.inference.meta import BaseTClassifier, BaseXClassifier, BaseRClassifier
 from causalml.inference.meta import BaseTRegressor, BaseXRegressor, BaseRRegressor
-from scipy import stats
-from lightgbm import LGBMClassifier, LGBMRegressor
-import numpy as np
-
 from causalml.propensity import ElasticNetPropensityModel
 from causalml.match import NearestNeighborMatch, create_table_one
-import pandas as pd
+from scipy import stats
+from .learners import LGBMClassifier, LGBMRegressor
+import numpy as np
+import warnings
+
+# from xgboost import XGBRegressor
+# from causalml.inference.meta import XGBTRegressor, MLPTRegressor
+
+
 
 metalearner_cls_dict = {'t-learner' : BaseTClassifier,
                         'x-learner' : BaseXClassifier,
@@ -26,20 +30,24 @@ metalearner_reg_dict = {'t-learner' : BaseTRegressor,
 class CausalInferenceModel:
     """
     Infers causality from the data contained in `df` using a metalearner.
-    The `treat_col` column should contain binary values: 1 for treated, 0 for untreated.
+    The`treat_col` column should contain binary values: 1 for treated, 0 for untreated.
     The `outcome_col` column should contain the outcome values, which can be either numeric (ints or floats)
     or categorical (strings).
     The `text_col` column contains the text values (e.g., articles, reviews, emails).
+    If `text_col` is not None, then columns in `df` that are not treatment or outcome are ignored
+    and text classifier/regressor will be used as the `learner`.
     All other columns are treated as additional numerical or categorical covariates unless
     they appear in `ignore_cols`.
     The `learner` parameter can be used to supply a custom learner to the metalearner.
+    The `treatment_effect_col` parameter holds the name of the column that will
+    store the causal effect estimations and is created automatically by `CausalInferenceModel.fit`.
     Example: `learner = LGBMClassifier(n_estimators=1000)`
     """
     def __init__(self,
                  df,
                  treatment_col='treatment',
                  outcome_col='outcome',
-                 text_col='text',
+                 text_col=None,
                  ignore_cols=[],
                  learner = None,
                  treatment_effect_col = 'treatment_effect',
@@ -55,6 +63,16 @@ class CausalInferenceModel:
         self.te = treatment_effect_col
         self.v = verbose
         self.df = df.copy()
+        if text_col is not None and text_col not in df:
+            raise ValueError(f'You specified text_col="{text_col}", but {text_col} is not a column in df.')
+        if self.treatment_col in self.ignore_cols:
+            raise ValueError(f'ignore_cols contains the treatment column ({treatment_col})')
+        if self.outcome_col in self.ignore_cols:
+            raise ValueError(f'ignore_cols contains the outcome column ({outcome_col})')
+        if text_col is not None:
+            raise ValueError(f'You supplied text_col="{text_col}", but raw text as a confounder '+\
+                             'is not yet supported. Please use Autocoder to extract lingustic properties.')
+
 
         # these are auto-populated by preprocess method
         self.is_classification = True
@@ -98,6 +116,11 @@ class CausalInferenceModel:
         df, self.is_classification = self._preprocess_column(df, self.outcome_col, is_treatment=False)
         self.feature_names = [c for c in df.columns.values \
                              if c not in [self.treatment_col, self.outcome_col]+self.ignore_cols]
+        if self.text_col is not None and self.text_col in self.feature_names:
+            warnings.warn(f'Since you specified text_col="{self.text_col}", other columns that are not ' +\
+                          'treatments or outcomes are ignored and the metalearner will use ' +\
+                          'a text classifier/regressor as the base learner.')
+            self.feature_names = [self.text_col]
         self.x = df[self.feature_names].copy()
         self.y = df[self.outcome_col].copy()
         self.treatment = df[self.treatment_col].copy()
@@ -109,8 +132,8 @@ class CausalInferenceModel:
 
         # step 3: one-hot encode categorial features
         for c in self.feature_names:
-            if self._check_type(df, c)['dtype']=='string':
-                self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c, drop_first=True), left_index=True, right_index=True)
+            if self._check_type(df, c)['dtype']=='string' and self.text_col is None:
+                self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c, drop_first=False), left_index=True, right_index=True)
                 del self.x[c]
         self.feature_names_one_hot = self.x.columns
         if self.v: print('outcome is: %s' % ('categorical' if self.is_classification else 'numerical'))

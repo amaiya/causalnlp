@@ -9,7 +9,9 @@ index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "ZeroShotClassifier": "01_autocoder.ipynb",
          "Autocoder": "01_autocoder.ipynb",
          "BaseTextLearner": "02_learners.ipynb",
-         "DefaultTextLearner": "02_learners.ipynb"}
+         "DefaultTextLearner": "02_learners.ipynb",
+         "DefaultTextClassifier": "02_learners.ipynb",
+         "DefaultTextRegressor": "02_learners.ipynb"}
 
 modules = ["causalinference.py",
            "autocoder.py",
