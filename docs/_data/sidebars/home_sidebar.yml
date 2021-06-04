@@ -15,9 +15,6 @@ entries:
     - output: web,pdf
       title: Auto Coder
       url: autocoder.html
-    - output: web,pdf
-      title: Examples
-      url: examples.html
     output: web
     title: causalnlp
   output: web
