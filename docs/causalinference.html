@@ -59,16 +59,20 @@ nb_path: "nbs/00_causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CausalModel" class="doc_header"><code>class</code> <code>CausalModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L27" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalModel</code>(<strong><code>df</code></strong>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>'text'</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Infers causality from the data contained in <code>df</code> using a metalearner.
-The <code>treat_col</code> column should contain binary values: 1 for treated, 0 for untreated.
+The<code>treat_col</code> column should contain binary values: 1 for treated, 0 for untreated.
 The <code>outcome_col</code> column should contain the outcome values, which can be either numeric (ints or floats)
 or categorical (strings).
 The <code>text_col</code> column contains the text values (e.g., articles, reviews, emails).
+If <code>text_col</code> is not None, then columns in <code>df</code> that are not treatment or outcome are ignored
+and text classifier/regressor will be used as the <code>learner</code>.
 All other columns are treated as additional numerical or categorical covariates unless
 they appear in <code>ignore_cols</code>.
 The <code>learner</code> parameter can be used to supply a custom learner to the metalearner.
+The <code>treatment_effect_col</code> parameter holds the name of the column that will
+store the causal effect estimations and is created automatically by <a href="/causalnlp/causalinference.html#CausalInferenceModel.fit"><code>CausalInferenceModel.fit</code></a>.
 Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 </div>
@@ -90,7 +94,7 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Example:-Does-a-medical-treatment-help-reduce-kidney-stones?">Example: Does a medical treatment help reduce kidney stones?<a class="anchor-link" href="#Example:-Does-a-medical-treatment-help-reduce-kidney-stones?"> </a></h4><p>We use the well-known <a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox#Kidney_stone_treatment">kidney stones example problem</a>. Let's <a href="https://github.com/uber/causalml/issues/249#issue-743803593">create</a> the dataset.</p>
+<h2 id="Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?">Example: Do social media posts by women get shared more often than those by men?<a class="anchor-link" href="#Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?"> </a></h2><p>Let's create a simulated dataset.</p>
 
 </div>
 </div>
@@ -104,9 +108,13 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
 <span class="n">data</span> <span class="o">=</span> <span class="p">((</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="p">[</span><span class="mi">36</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">192</span><span class="p">]))</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Open_Surgery?&#39;</span><span class="p">,</span> <span class="s1">&#39;Large_Stone?&#39;</span><span class="p">,</span> <span class="s1">&#39;Favorable?&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Text&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;I really love my job!&#39;</span><span class="p">,</span> <span class="s1">&#39;My boss is pretty terrible.&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">original_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">original_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -138,40 +146,40 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Open_Surgery?</th>
-      <th>Large_Stone?</th>
-      <th>Favorable?</th>
+      <th>Is_Male?</th>
+      <th>Post_Text</th>
+      <th>Post_Shared?</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>0</td>
-      <td>0</td>
+      <td>I really love my job!</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0</td>
-      <td>0</td>
+      <td>I really love my job!</td>
       <td>0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0</td>
-      <td>0</td>
+      <td>I really love my job!</td>
       <td>0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0</td>
-      <td>0</td>
+      <td>I really love my job!</td>
       <td>0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0</td>
-      <td>0</td>
+      <td>I really love my job!</td>
       <td>0</td>
     </tr>
   </tbody>
@@ -189,7 +197,7 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next, create the <a href="/causalnlp/causalinference.html#CausalModel"><code>CausalModel</code></a> and train it with <code>fit</code>.</p>
+<p>At first glance, it seems like posts by women get shared more often.  More specifically, it appears that being male <strong>reduces</strong> your the chance your post is shared by 4.5 percentage points:</p>
 
 </div>
 </div>
@@ -201,8 +209,261 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;Open_Surgery?&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Favorable?&#39;</span><span class="p">,</span> 
-                      <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[])</span> <span class="c1"># ignore columns used as treatment (N/A  here)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">male_probability</span> <span class="o">=</span> <span class="n">original_df</span><span class="p">[(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)][</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">male_probability</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.78</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">female_probability</span> <span class="o">=</span> <span class="n">original_df</span><span class="p">[(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)][</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">female_probability</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8257142857142857</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">male_probability</span><span class="o">-</span><span class="n">female_probability</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>-0.04571428571428571</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>However, this is inaccurate. In fact, this is an example of <a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Simpson's Paradox</a>, and the true causal effect of being male in this simulated datsaet is roughly <strong>0.05</strong> (as opposed to <strong>-0.045</strong>) with men's posts being more likely to be shared. The reason is that women in this simulation tend to make more positive posts which tend to be shared more often here. Post sentiment, then, is a <a href="https://en.wikipedia.org/wiki/Mediation_(statistics">mediator</a>, which is statistically the same thing as a <a href="https://en.wikipedia.org/wiki/Confounding">confounder</a>.</p>
+<p>When controlling for the sentiment of the post (the mediator variable in this dataset), it is revealed that men's posts are, in fact, shared more often (for both negative posts and positive posts). This can be quickly and easily estimated in <strong>CausalNLP</strong>.</p>
+<h3 id="Causal-Inference-from-Text-with-Autocoders">Causal Inference from Text with Autocoders<a class="anchor-link" href="#Causal-Inference-from-Text-with-Autocoders"> </a></h3><p>Let's first use the <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a> to transform the raw text into sentiment.  We can then control for sentiment when estimating the causal effect.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">causalnlp.autocoder</span> <span class="kn">import</span> <span class="n">Autocoder</span>
+<span class="n">ac</span> <span class="o">=</span> <span class="n">Autocoder</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Is_Male?</th>
+      <th>Post_Text</th>
+      <th>Post_Shared?</th>
+      <th>negative</th>
+      <th>positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0.019191</td>
+      <td>0.980809</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0.019191</td>
+      <td>0.980809</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0.019191</td>
+      <td>0.980809</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0.019191</td>
+      <td>0.980809</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0.019191</td>
+      <td>0.980809</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When autocoding the raw text for sentiment, we have chosen to binarize the probabilities (<code>binarize=True</code>).  Raw probabilities can also be used with <code>binarize=False</code>.</p>
+<p>Next, let's estimate the treatment effects. We will ignore the <code>positive</code> and <code>Post_Shared?</code> columns, as their information is captured by the <code>negative</code> column in this example.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalInferenceModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span>
+                          <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Text&#39;</span><span class="p">])</span>
 <span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 
@@ -216,10 +477,12 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>outcome is: categorical
-preprocess time:  0.010984182357788086  sec
-start fitting causal model
-time to fit causalmodel:  1.0818510055541992  sec
+<pre>outcome column (categorical): Post_Shared?
+treatment column: Is_Male?
+numerical/categorical covariates: [&#39;negative&#39;]
+preprocess time:  0.013587713241577148  sec
+start fitting causal inference model
+time to fit causal inference model:  1.1520981788635254  sec
 </pre>
 </div>
 </div>
@@ -232,7 +495,7 @@ time to fit causalmodel:  1.0818510055541992  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The overall average treatment is correctly estimated as 0.05.</p>
+<p>Upon controlling for sentiment, we see that the overall average treatment is correctly estimated as 0.05.</p>
 
 </div>
 </div>
@@ -271,6 +534,87 @@ time to fit causalmodel:  1.0818510055541992  sec
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>CausalNLP</strong> allows you to easily compute conditional or individualized treatment effects.
+For instance, for negative posts, being male increases the chance of your post being shared by about 4 percentage points:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.9</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;ate&#39;: 0.042535751074149745}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For positive posts, being male increases the chance of your post being shared by about 6 percentage points:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;ate&#39;: 0.06436468274776497}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -291,7 +635,8 @@ time to fit causalmodel:  1.0818510055541992  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The treatment effects for patients with larger kidney stones vs. smaller kidney stones can also be estimated. Those with larger kidney stones, which are harder-to-treat, are correctly estimated to have a lower treatment effect than those with smaller kindney stones.</p>
+<h3 id="Causal-Inference-Using-Raw-Text-as-a-Confounder/Mediator">Causal Inference Using Raw Text as a Confounder/Mediator<a class="anchor-link" href="#Causal-Inference-Using-Raw-Text-as-a-Confounder/Mediator"> </a></h3><p>In the example above, we approached the problem under the assumption that a specific lingustic property (sentiment) was an important mediator or confounder for which to control. In some cases, there may also be other unknown lingustic properties that are potential confounders/mediators (e.g., topic, politeness, toxic language, readability).</p>
+<p>In <strong>CausalNLP</strong>, we can also use the <strong>raw text</strong> as the potential confounder/mediator.</p>
 
 </div>
 </div>
@@ -303,7 +648,87 @@ time to fit causalmodel:  1.0818510055541992  sec
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Large_Stone?&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalInferenceModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span> <span class="n">text_col</span><span class="o">=</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">,</span>
+                         <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>outcome column (categorical): Post_Shared?
+treatment column: Is_Male?
+numerical/categorical covariates: []
+text covariate: Post_Text
+preprocess time:  0.015669584274291992  sec
+start fitting causal inference model
+time to fit causal inference model:  0.36989498138427734  sec
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Although we have excluded the <strong>negative</strong> and <strong>positive</strong> columns as extra covariates, you can use traditional categorical/numerical covariates in combination with a text field covariate (if they exist as extra columns in the dataframe).</p>
+<p>Here, we see that the same causal estimates are returned, as the text is easy to infer as positive or negative based on their correlations with the outcomes in this problem.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;ate&#39;: 0.05366850622769351}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;My boss is pretty terrible.&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -336,7 +761,7 @@ time to fit causalmodel:  1.0818510055541992  sec
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Large_Stone?&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;I really love my job!&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -356,6 +781,244 @@ time to fit causalmodel:  1.0818510055541992  sec
 
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">ate</span><span class="p">[</span><span class="s1">&#39;ate&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+<span class="k">assert</span> <span class="n">ate</span><span class="p">[</span><span class="s1">&#39;ate&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.055</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Causal-Inference-With-Text-as-a-Treatment">Causal Inference With Text as a Treatment<a class="anchor-link" href="#Causal-Inference-With-Text-as-a-Treatment"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Suppose we were interested in estimating the causal impact of <strong>sentiment</strong> on the outcome.  That is, <strong>sentiment</strong> of text is the treatment, and the <strong>gender</strong> is a potential confounder. As we did above, we can use the <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a> to create the treatment variable.  The only difference is that we would supply the <code>binarize=True</code> as an argument.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Is_Male?</th>
+      <th>Post_Text</th>
+      <th>Post_Shared?</th>
+      <th>negative</th>
+      <th>positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>I really love my job!</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalInferenceModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span>
+                          <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Text&#39;</span><span class="p">])</span>
+<span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>outcome column (categorical): Post_Shared?
+treatment column: positive
+numerical/categorical covariates: [&#39;Is_Male?&#39;]
+preprocess time:  0.010259628295898438  sec
+start fitting causal inference model
+time to fit causal inference model:  0.20110607147216797  sec
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ate</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">()</span>
+<span class="n">ate</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;ate&#39;: 0.19008080596986368}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">ate</span><span class="p">[</span><span class="s1">&#39;ate&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.18</span>
+<span class="k">assert</span> <span class="n">ate</span><span class="p">[</span><span class="s1">&#39;ate&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.2</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

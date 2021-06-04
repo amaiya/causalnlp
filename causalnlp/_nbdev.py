@@ -7,15 +7,10 @@ index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "metalearner_reg_dict": "00_causalinference.ipynb",
          "list2chunks": "01_autocoder.ipynb",
          "ZeroShotClassifier": "01_autocoder.ipynb",
-         "Autocoder": "01_autocoder.ipynb",
-         "BaseTextLearner": "02_learners.ipynb",
-         "DefaultTextLearner": "02_learners.ipynb",
-         "DefaultTextClassifier": "02_learners.ipynb",
-         "DefaultTextRegressor": "02_learners.ipynb"}
+         "Autocoder": "01_autocoder.ipynb"}
 
 modules = ["causalinference.py",
-           "autocoder.py",
-           "learners.py"]
+           "autocoder.py"]
 
 doc_url = "https://amaiya.github.io/causalnlp/"
 

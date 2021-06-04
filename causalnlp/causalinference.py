@@ -6,12 +6,14 @@ __all__ = ['CausalInferenceModel', 'metalearner_cls_dict', 'metalearner_reg_dict
 import pandas as pd
 pd.set_option('display.max_columns', 500)
 import time
-from causalml.inference.meta import BaseTClassifier, BaseXClassifier, BaseRClassifier
-from causalml.inference.meta import BaseTRegressor, BaseXRegressor, BaseRRegressor
+from causalml.inference.meta import BaseTClassifier, BaseXClassifier, BaseRClassifier, BaseSClassifier
+from causalml.inference.meta import BaseTRegressor, BaseXRegressor, BaseRRegressor, BaseSRegressor
+from causalml.inference.meta import LRSRegressor
 from causalml.propensity import ElasticNetPropensityModel
 from causalml.match import NearestNeighborMatch, create_table_one
 from scipy import stats
-from .learners import LGBMClassifier, LGBMRegressor
+from lightgbm import LGBMClassifier, LGBMRegressor
+from sklearn.linear_model import LogisticRegression, LinearRegression
 import numpy as np
 import warnings
 
@@ -22,10 +24,12 @@ import warnings
 
 metalearner_cls_dict = {'t-learner' : BaseTClassifier,
                         'x-learner' : BaseXClassifier,
-                        'r-learner' : BaseRClassifier}
+                        'r-learner' : BaseRClassifier,
+                         's-learner': BaseSClassifier}
 metalearner_reg_dict = {'t-learner' : BaseTRegressor,
                         'x-learner' : BaseXRegressor,
-                        'r-learner' : BaseRRegressor}
+                        'r-learner' : BaseRRegressor,
+                        's-learner' : BaseSRegressor}
 
 class CausalInferenceModel:
     """
@@ -51,6 +55,9 @@ class CausalInferenceModel:
                  ignore_cols=[],
                  learner = None,
                  treatment_effect_col = 'treatment_effect',
+                 min_df=0.05,
+                 max_df=0.5,
+                 stop_words='english',
                  verbose=1):
         """
         constructor
@@ -63,15 +70,15 @@ class CausalInferenceModel:
         self.te = treatment_effect_col
         self.v = verbose
         self.df = df.copy()
+        self.min_df = 0.05
+        self.max_df = 0.5
+        self.stop_words = stop_words
         if text_col is not None and text_col not in df:
             raise ValueError(f'You specified text_col="{text_col}", but {text_col} is not a column in df.')
         if self.treatment_col in self.ignore_cols:
             raise ValueError(f'ignore_cols contains the treatment column ({treatment_col})')
         if self.outcome_col in self.ignore_cols:
             raise ValueError(f'ignore_cols contains the outcome column ({outcome_col})')
-        if text_col is not None:
-            raise ValueError(f'You supplied text_col="{text_col}", but raw text as a confounder '+\
-                             'is not yet supported. Please use Autocoder to extract lingustic properties.')
 
 
         # these are auto-populated by preprocess method
@@ -86,18 +93,36 @@ class CausalInferenceModel:
 
         # setup model
         metalearner_type = 't-learner' # support T-Learners for now
-        if self.is_classification:
-            learner = LGBMClassifier() if learner is None else learner
-            metalearner_cls = metalearner_cls_dict[metalearner_type]
+        self.model = self._create_metalearner(metalearner_type=metalearner_type,
+                                             supplied_learner=learner)
+
+
+
+    def _create_metalearner(self, metalearner_type='t-learner', supplied_learner=None):
+        # set learner
+        default_learner = None
+        if metalearner_type == 's-learner':
+            if self.is_classification:
+                default_learner =  LogisticRegression()
+            else:
+                default_learner = LinearRegression()
         else:
-            learner = LGBMRegressor() if learner is None else learner
-            metalearner_cls = metalearner_reg_dict[metalearner_type]
-        if metalearner_cls in [BaseTClassifier, BaseTRegressor]:
-            self.model = metalearner_cls(learner=learner,control_name=0)
+            if self.is_classification:
+                default_learner = LGBMClassifier()
+            else:
+                default_learner =  LGBMRegressor()
+        learner = default_learner if supplied_learner is None else supplied_learner
+
+        # set metalearner
+        metalearner_class = metalearner_cls_dict[metalearner_type] if self.is_classification \
+                                                                   else metalearner_reg_dict[metalearner_type]
+        if metalearner_type in ['t-learner', 's-learner']:
+            model = metalearner_class(learner=learner,control_name=0)
         else:
-            self.model = metalearner_cls(outcome_learner=learner,
-                                     effect_learner=learner,
-                                     control_name=0)
+            model = metalearner_class(outcome_learner=learner,
+                                      effect_learner=LGBMRegressor(),
+                                      control_name=0)
+        return model
 
 
     def preprocess(self, df=None, na_cont_value=-1, na_cat_value='MISSING'):
@@ -115,28 +140,58 @@ class CausalInferenceModel:
         df, _ = self._preprocess_column(df, self.treatment_col, is_treatment=True)
         df, self.is_classification = self._preprocess_column(df, self.outcome_col, is_treatment=False)
         self.feature_names = [c for c in df.columns.values \
-                             if c not in [self.treatment_col, self.outcome_col]+self.ignore_cols]
-        if self.text_col is not None and self.text_col in self.feature_names:
-            warnings.warn(f'Since you specified text_col="{self.text_col}", other columns that are not ' +\
-                          'treatments or outcomes are ignored and the metalearner will use ' +\
-                          'a text classifier/regressor as the base learner.')
-            self.feature_names = [self.text_col]
+                             if c not in [self.treatment_col,
+                                          self.outcome_col, self.text_col]+self.ignore_cols]
+        #if self.text_col is not None and self.text_col in self.feature_names:
+        #    warnings.warn(f'Since you specified text_col="{self.text_col}", other columns that are not ' +\
+        #                  'treatments or outcomes are ignored and the metalearner will use ' +\
+        #                  'a text classifier/regressor as the base learner.')
+        #    self.feature_names = [self.text_col]
         self.x = df[self.feature_names].copy()
         self.y = df[self.outcome_col].copy()
         self.treatment = df[self.treatment_col].copy()
+
 
         # step 2: fill empty values on x
         for c in self.feature_names:
             if self._check_type(df, c)['dtype'] =='string': self.x[c] = self.x[c].fillna(na_cat_value)
             if self._check_type(df, c)['dtype']=='numeric': self.x[c] = self.x[c].fillna(na_cont_value)
 
+
         # step 3: one-hot encode categorial features
         for c in self.feature_names:
-            if self._check_type(df, c)['dtype']=='string' and self.text_col is None:
-                self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c, drop_first=False), left_index=True, right_index=True)
+            if c == self.text_col: continue
+            if self._check_type(df, c)['dtype']=='string':
+                if self.df[c].nunique()/self.df.shape[0] > 0.5:
+                    if self.text_col is not None:
+                        err_msg = f'Column "{c}" looks like it contains free-form text. ' +\
+                        f'Since there is already a text_col specified ({self.text_col}), '+\
+                        f'you should probably include this column in the "ignore_cols" list.'
+                    else:
+                        err_msg = f'Column "{c}" looks like it contains free-form text. ' +\
+                        f'Please either set text_col="{c}" or add it to "ignore_cols" list.'
+                    raise ValueError(err_msg)
+
+                self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c,
+                                                     drop_first=False),
+                                                     left_index=True, right_index=True)
                 del self.x[c]
         self.feature_names_one_hot = self.x.columns
-        if self.v: print('outcome is: %s' % ('categorical' if self.is_classification else 'numerical'))
+
+
+        # step 4: for text-based confounder, use extracted vocabulary as features
+        if self.text_col is not None:
+            from sklearn.feature_extraction.text import TfidfVectorizer
+            tv = TfidfVectorizer(min_df=self.min_df, max_df=self.max_df, stop_words=self.stop_words)
+            v_features = tv.fit_transform(self.df[self.text_col])
+            vocab = tv.get_feature_names()
+            vocab_df = pd.DataFrame(v_features.toarray(), columns = ["v_%s" % (v) for v in vocab])
+            self.x = pd.concat([self.x, vocab_df], axis=1, join='inner')
+        outcome_type = 'categorical' if self.is_classification else 'numerical'
+        if self.v: print(f'outcome column ({outcome_type}): {self.outcome_col}')
+        if self.v: print(f'treatment column: {self.treatment_col}')
+        if self.v: print('numerical/categorical covariates: %s' % (self.feature_names))
+        if self.v and self.text_col: print('text covariate: %s' % (self.text_col))
         if self.v: print("preprocess time: ", -start_time + time.time()," sec")
 
         return df
