@@ -53,8 +53,9 @@ class CausalInferenceModel:
                  outcome_col='outcome',
                  text_col=None,
                  ignore_cols=[],
-                 learner = None,
                  treatment_effect_col = 'treatment_effect',
+                 learner = None,
+                 metalearner_type='t-learner',
                  min_df=0.05,
                  max_df=0.5,
                  stop_words='english',
@@ -68,6 +69,7 @@ class CausalInferenceModel:
         self.text_col = text_col # currently ignored
         self.ignore_cols = ignore_cols
         self.te = treatment_effect_col
+        self.metalearner_type = metalearner_type
         self.v = verbose
         self.df = df.copy()
         self.min_df = 0.05
@@ -92,8 +94,7 @@ class CausalInferenceModel:
         self.preprocess(self.df)
 
         # setup model
-        metalearner_type = 't-learner' # support T-Learners for now
-        self.model = self._create_metalearner(metalearner_type=metalearner_type,
+        self.model = self._create_metalearner(metalearner_type=self.metalearner_type,
                                              supplied_learner=learner)
 
 
