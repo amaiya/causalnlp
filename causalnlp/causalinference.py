@@ -33,6 +33,8 @@ metalearner_reg_dict = {'t-learner' : BaseTRegressor,
 
 class CausalInferenceModel:
     """Infers causality from the data contained in `df` using a metalearner.
+
+
     Usage:
 
     ```python
@@ -42,6 +44,9 @@ class CausalInferenceModel:
                                   ignore_cols=['id', 'email'])
         cm.fit()
     ```
+
+    **Parameters:**
+
     * **df** : pandas.DataFrame containing dataset
     * **treatment_col** : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
     * **outcome_col** : outcome variable; column should contain the categorical or numeric outcome values
@@ -281,6 +286,10 @@ class CausalInferenceModel:
                 if c not in [self.treatment_col, self.outcome_col]+self.ignore_cols]
 
     def fit(self):
+        """
+        Fits a causal inference model and estimates outcome
+        with and without treatment for each observation.
+        """
         print("start fitting causal inference model")
         start_time = time.time()
         self.model.fit(self.x.values, self.treatment.values, self.y.values)
@@ -289,12 +298,19 @@ class CausalInferenceModel:
         print("time to fit causal inference model: ",-start_time + time.time()," sec")
 
     def predict(self, x):
+        """
+        Estimates the treatment effect for each observation in `x`.
+        """
         if isinstance(x, pd.DataFrame):
             return self.model.predict(x.values)
         else:
             return self.model.predict(x)
 
     def estimate_ate(self, bool_mask=None):
+        """
+        Estimates the treatment effect for each observation in
+        `self.df`.
+        """
         df = self.df if bool_mask is None else self.df[bool_mask]
         a = df[self.te].values
         mean = np.mean(a)
