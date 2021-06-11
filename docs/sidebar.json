@@ -3,7 +3,6 @@
     "Overview": "/",
     "Causal Inference": "causalinference.html",
     "Auto Coder": "autocoder.html",
-    "Analyzers - Zero-Shot Learning": "analyzers.zsl.html",
-    "Analyzers - Zero-Shot Learning2": "analyzers.zsl2.html"
+    "Analyzers": "analyzers.html"
   }
 }
