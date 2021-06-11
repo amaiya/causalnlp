@@ -73,7 +73,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="ZeroShotClassifier" class="doc_header"><code>class</code> <code>ZeroShotClassifier</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ZeroShotClassifier</code>(<strong><code>model_name</code></strong>=<em><code>'facebook/bart-large-mnli'</code></em>, <strong><code>device</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<p>interface to Zero Shot Topic Classifier</p>
+<p>Interface to Zero Shot Topic Classifier</p>
 
 </div>
 
@@ -88,6 +88,52 @@ nb_path: "nbs/01_autocoder.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="ZeroShotClassifier.predict" class="doc_header"><code>ZeroShotClassifier.predict</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L44" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ZeroShotClassifier.predict</code>(<strong><code>docs</code></strong>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>include_labels</code></strong>=<em><code>False</code></em>, <strong><code>multilabel</code></strong>=<em><code>True</code></em>, <strong><code>max_length</code></strong>=<em><code>512</code></em>, <strong><code>batch_size</code></strong>=<em><code>8</code></em>, <strong><code>nli_template</code></strong>=<em><code>'This text is about {}.'</code></em>, <strong><code>topic_strings</code></strong>=<em><code>[]</code></em>)</p>
+</blockquote>
+<p>This method performs zero-shot text classification using Natural Language Inference (NLI).</p>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li>docs(list|str): text of document or list of texts</li>
+<li>labels(list): a list of strings representing topics of your choice
+<pre><code>          Example:
+           labels=['political science', 'sports', 'science']</code></pre>
+</li>
+<li>include_labels(bool): If True, will return topic labels along with topic probabilities</li>
+<li>multilabel(bool): If True, labels are considered independent and multiple labels can predicted true for document and be close to 1.
+<pre><code>            If False, scores are normalized such that probabilities sum to 1.</code></pre>
+</li>
+<li>max_length(int): truncate long documents to this many tokens</li>
+<li>batch_size(int): batch_size to use. default:8
+<pre><code>           Increase this value to speed up predictions - especially
+           if len(topic_strings) is large.</code></pre>
+</li>
+<li>nli_template(str): labels are inserted into this template for use as hypotheses in natural language inference</li>
+<li>topic_strings(list): alias for labels parameter for backwards compatibility</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>inferred probabilities or list of inferred probabilities if doc is list</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -182,7 +228,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Autocoder" class="doc_header"><code>class</code> <code>Autocoder</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L118" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Autocoder</code>(<strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="Autocoder" class="doc_header"><code>class</code> <code>Autocoder</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L123" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Autocoder</code>(<strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Autocodes text fields</p>
 
@@ -203,6 +249,88 @@ nb_path: "nbs/01_autocoder.ipynb"
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Autocoder.code_sentiment" class="doc_header"><code>Autocoder.code_sentiment</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L157" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Autocoder.code_sentiment</code>(<strong><code>docs</code></strong>, <strong><code>df</code></strong>, <strong><code>batch_size</code></strong>=<em><code>8</code></em>, <strong><code>binarize</code></strong>=<em><code>False</code></em>, <strong><code>threshold</code></strong>=<em><code>0.5</code></em>)</p>
+</blockquote>
+<p>Autocodes text for positive or negative sentiment</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Autocoder.code_custom_topics" class="doc_header"><code>Autocoder.code_custom_topics</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L181" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Autocoder.code_custom_topics</code>(<strong><code>docs</code></strong>, <strong><code>df</code></strong>, <strong><code>labels</code></strong>, <strong><code>batch_size</code></strong>=<em><code>8</code></em>, <strong><code>binarize</code></strong>=<em><code>False</code></em>, <strong><code>threshold</code></strong>=<em><code>0.5</code></em>)</p>
+</blockquote>
+<p>Autocodes text for user-specified topics.
+The <code>label</code> field is the name of the topic as a string (or a list of them.)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Autocoder.code_emotion" class="doc_header"><code>Autocoder.code_emotion</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/autocoder.py#L169" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Autocoder.code_emotion</code>(<strong><code>docs</code></strong>, <strong><code>df</code></strong>, <strong><code>batch_size</code></strong>=<em><code>8</code></em>, <strong><code>binarize</code></strong>=<em><code>False</code></em>, <strong><code>threshold</code></strong>=<em><code>0.5</code></em>)</p>
+</blockquote>
+<p>Autocodes text for emotion</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Usage-Examples">Usage Examples<a class="anchor-link" href="#Usage-Examples"> </a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This is what the dataframe looks like before autocoding for sentiment:</p>
