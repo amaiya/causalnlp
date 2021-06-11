@@ -6,7 +6,7 @@ __all__ = ['Autocoder']
 import numpy as np
 import pandas as pd
 pd.set_option('display.max_columns', 500)
-from .analyzers import ZeroShotClassifier
+from .analyzers import ZeroShotClassifier, TextEncoder
 
 class Autocoder:
     """
@@ -97,9 +97,22 @@ class Autocoder:
         or probabilities.
         """
 
-        results = self.zsl.predict(docs, labels=labels, include_labels=True, batch_size=8)
+        results = []
+        for doc in docs:  results.append(fn(doc))
         df = self._format_to_df(results, df)
-        if binarize: df = self._binarize_df(df, labels, threshold=threshold)
         return df
 
-
+    def code_vector(self, docs, df, batch_size=32, show_progress_bar=False):
+        """
+        Encode texts as semantically meaningful vectors using a Transformer model
+        """
+        te = TextEncoder()
+        e = te.encode(docs, batch_size=batch_size, show_progress_bar=show_progress_bar)
+        elen = e.shape[1]
+        results = []
+        for row, data in enumerate(e):
+            keys = ["e_%04d" %(i) for i in range(data.shape[0])]
+            vals = [v for v in data]
+            results.append( list(zip(keys, vals)) )
+        df = self._format_to_df(results, df)
+        return df

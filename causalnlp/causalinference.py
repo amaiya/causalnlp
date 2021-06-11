@@ -323,6 +323,15 @@ class CausalInferenceModel:
         mean = np.mean(a)
         return {'ate' : mean}
 
+    def interpret(self, normalize=True, plot=False):
+        """Returns feature importances of treatment effect model"""
+        tau = self.df[self.te]
+        feature_names = self.x.columns.values
+        if plot:
+            fn = self.model.plot_importance
+        else:
+            fn = self.model.get_importance
+        return fn(X=self.x, tau=tau, normalize=True, method='auto', features = feature_names)
 
 
     def minimize_bias(self, caliper = None):
