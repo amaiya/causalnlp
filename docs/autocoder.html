@@ -297,7 +297,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_sentiment</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;review&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="n">result_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -477,7 +477,7 @@ nb_path: "nbs/01_autocoder.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">custom_topic</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;television&#39;</span><span class="p">,</span> <span class="s1">&#39;film&#39;</span><span class="p">,</span> <span class="s1">&#39;politics&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_custom_topics</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;comments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;television&#39;</span><span class="p">,</span> <span class="s1">&#39;film&#39;</span><span class="p">,</span> <span class="s1">&#39;politics&#39;</span><span class="p">])</span>
 <span class="n">result_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 

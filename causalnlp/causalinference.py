@@ -34,18 +34,23 @@ metalearner_reg_dict = {'t-learner' : BaseTRegressor,
 class CausalInferenceModel:
     """
     Infers causality from the data contained in `df` using a metalearner.
-    The`treat_col` column should contain binary values: 1 for treated, 0 for untreated.
-    The `outcome_col` column should contain the outcome values, which can be either numeric (ints or floats)
-    or categorical (strings).
-    The `text_col` column contains the text values (e.g., articles, reviews, emails).
-    If `text_col` is not None, then columns in `df` that are not treatment or outcome are ignored
-    and text classifier/regressor will be used as the `learner`.
-    All other columns are treated as additional numerical or categorical covariates unless
-    they appear in `ignore_cols`.
-    The `learner` parameter can be used to supply a custom learner to the metalearner.
-    The `treatment_effect_col` parameter holds the name of the column that will
-    store the causal effect estimations and is created automatically by `CausalInferenceModel.fit`.
-    Example: `learner = LGBMClassifier(n_estimators=1000)`
+    * **df** - pandas.DataFrame containing dataset
+    * **treatment_col** - treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
+    * **outcome_col** - outcome variable; column should contain the categorical or numeric outcome values
+    * **text_col** - (optional) text column containing the strings (e.g., articles, reviews, emails).
+    * **ignore_cols** - columns to ignore in the analysis
+    * **include_cols** - columns to include as covariates (e.g., possible confounders)
+    * **treatment_effect_col** - name of column to hold causal effect estimations.
+                                 Does not need to exist.  Created by CausalNLP.
+    * **metalearner_type** - metalearner model to use.
+                            One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (default:'t-learner').
+                            Default: 't-learner'
+    * **learner** - an instance of a custom learner.  If None, a default LightGBM will be used.
+                     Example: `learner = LGBMClassifier(n_estimators=1000)`
+    * **min_df** - min_df parameter used for text processing using sklearn
+    * **max_df** - max_df parameter used for text procesing using sklearn
+    * **stop_words** - stop words used for text processing (from sklearn)
+    * **verbose** - If 1, print informational messages.  If 0, suppress.
     """
     def __init__(self,
                  df,
@@ -53,9 +58,10 @@ class CausalInferenceModel:
                  outcome_col='outcome',
                  text_col=None,
                  ignore_cols=[],
+                 include_cols=[],
                  treatment_effect_col = 'treatment_effect',
-                 learner = None,
                  metalearner_type='t-learner',
+                 learner = None,
                  min_df=0.05,
                  max_df=0.5,
                  stop_words='english',
@@ -66,15 +72,27 @@ class CausalInferenceModel:
 
         self.treatment_col = treatment_col
         self.outcome_col = outcome_col
-        self.text_col = text_col # currently ignored
-        self.ignore_cols = ignore_cols
-        self.te = treatment_effect_col
+        self.text_col = text_col
+        self.te = treatment_effect_col # created
         self.metalearner_type = metalearner_type
         self.v = verbose
         self.df = df.copy()
         self.min_df = 0.05
         self.max_df = 0.5
         self.stop_words = stop_words
+        if not isinstance(ignore_cols, list):
+            raise ValueError('ignore_cols must be a list.')
+        if not isinstance(include_cols, list):
+            raise ValueError('include_cols must be a list.')
+        if ignore_cols and include_cols:
+            raise  ValueError('ignore_cols and include_cols are mutually exclusive.  Please choose one.')
+        if include_cols:
+            ignore_cols = [c for c in df.columns.values if c not in include_cols + [treatment_col,
+                                                                                    outcome_col,
+                                                                                    text_col]]
+        self.ignore_cols = ignore_cols
+        self.include_cols = include_cols
+
         if text_col is not None and text_col not in df:
             raise ValueError(f'You specified text_col="{text_col}", but {text_col} is not a column in df.')
         if self.treatment_col in self.ignore_cols:

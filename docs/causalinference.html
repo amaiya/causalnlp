@@ -59,21 +59,31 @@ nb_path: "nbs/00_causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>metalearner_type</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
-<p>Infers causality from the data contained in <code>df</code> using a metalearner.
-The<code>treat_col</code> column should contain binary values: 1 for treated, 0 for untreated.
-The <code>outcome_col</code> column should contain the outcome values, which can be either numeric (ints or floats)
-or categorical (strings).
-The <code>text_col</code> column contains the text values (e.g., articles, reviews, emails).
-If <code>text_col</code> is not None, then columns in <code>df</code> that are not treatment or outcome are ignored
-and text classifier/regressor will be used as the <code>learner</code>.
-All other columns are treated as additional numerical or categorical covariates unless
-they appear in <code>ignore_cols</code>.
-The <code>learner</code> parameter can be used to supply a custom learner to the metalearner.
-The <code>treatment_effect_col</code> parameter holds the name of the column that will
-store the causal effect estimations and is created automatically by <a href="/causalnlp/causalinference.html#CausalInferenceModel.fit"><code>CausalInferenceModel.fit</code></a>.
-Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
+<p>Infers causality from the data contained in <code>df</code> using a metalearner.</p>
+<ul>
+<li><strong>df</strong> - pandas.DataFrame containing dataset</li>
+<li><strong>treatment_col</strong> - treatment variable; column should contain binary values: 1 for treated, 0 for untreated.</li>
+<li><strong>outcome_col</strong> - outcome variable; column should contain the categorical or numeric outcome values</li>
+<li><strong>text_col</strong> - (optional) text column containing the strings (e.g., articles, reviews, emails).</li>
+<li><strong>ignore_cols</strong> - columns to ignore in the analysis</li>
+<li><strong>include_cols</strong> - columns to include as covariates (e.g., possible confounders)</li>
+<li><strong>treatment_effect_col</strong> - name of column to hold causal effect estimations.
+<pre><code>                       Does not need to exist.  Created by CausalNLP.</code></pre>
+</li>
+<li><strong>metalearner_type</strong> - metalearner model to use.
+<pre><code>                  One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (default:'t-learner').
+                  Default: 't-learner'</code></pre>
+</li>
+<li><strong>learner</strong> - an instance of a custom learner.  If None, a default LightGBM will be used.
+<pre><code>           Example: `learner = LGBMClassifier(n_estimators=1000)`</code></pre>
+</li>
+<li><strong>min_df</strong> - min_df parameter used for text processing using sklearn</li>
+<li><strong>max_df</strong> - max_df parameter used for text procesing using sklearn</li>
+<li><strong>stop_words</strong> - stop words used for text processing (from sklearn)</li>
+<li><strong>verbose</strong> - If 1, print informational messages.  If 0, suppress.</li>
+</ul>
 
 </div>
 
@@ -94,7 +104,7 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?">Example: Do social media posts by women get shared more often than those by men?<a class="anchor-link" href="#Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?"> </a></h2><p>Let's create a simulated dataset.</p>
+<h3 id="Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?">Example: Do social media posts by women get shared more often than those by men?<a class="anchor-link" href="#Example:-Do-social-media-posts-by-women-get-shared-more-often-than-those-by-men?"> </a></h3><p>Let's create a simulated dataset.</p>
 
 </div>
 </div>
@@ -337,7 +347,7 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -463,7 +473,7 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalInferenceModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span>
-                          <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Text&#39;</span><span class="p">])</span>
+                          <span class="n">include_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">])</span>
 <span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 
@@ -480,9 +490,9 @@ Example: <code>learner = LGBMClassifier(n_estimators=1000)</code></p>
 <pre>outcome column (categorical): Post_Shared?
 treatment column: Is_Male?
 numerical/categorical covariates: [&#39;negative&#39;]
-preprocess time:  0.013587713241577148  sec
+preprocess time:  0.014408588409423828  sec
 start fitting causal inference model
-time to fit causal inference model:  1.1520981788635254  sec
+time to fit causal inference model:  0.5292856693267822  sec
 </pre>
 </div>
 </div>
@@ -667,9 +677,9 @@ For instance, for negative posts, being male increases the chance of your post b
 treatment column: Is_Male?
 numerical/categorical covariates: []
 text covariate: Post_Text
-preprocess time:  0.015669584274291992  sec
+preprocess time:  0.01554560661315918  sec
 start fitting causal inference model
-time to fit causal inference model:  0.36989498138427734  sec
+time to fit causal inference model:  0.06210470199584961  sec
 </pre>
 </div>
 </div>
@@ -695,7 +705,8 @@ time to fit causal inference model:  0.36989498138427734  sec
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ate</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">()</span>
+<span class="n">ate</span>
 </pre></div>
 
     </div>
@@ -825,7 +836,7 @@ time to fit causal inference model:  0.36989498138427734  sec
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_sentiment</span><span class="p">(</span><span class="n">original_df</span><span class="p">[</span><span class="s1">&#39;Post_Text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">original_df</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -943,7 +954,7 @@ time to fit causal inference model:  0.36989498138427734  sec
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">CausalInferenceModel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Post_Shared?&#39;</span><span class="p">,</span>
-                          <span class="n">ignore_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;Post_Text&#39;</span><span class="p">])</span>
+                          <span class="n">include_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Is_Male?&#39;</span><span class="p">])</span>
 <span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 
@@ -960,9 +971,9 @@ time to fit causal inference model:  0.36989498138427734  sec
 <pre>outcome column (categorical): Post_Shared?
 treatment column: positive
 numerical/categorical covariates: [&#39;Is_Male?&#39;]
-preprocess time:  0.010259628295898438  sec
+preprocess time:  0.009786844253540039  sec
 start fitting causal inference model
-time to fit causal inference model:  0.20110607147216797  sec
+time to fit causal inference model:  0.6526179313659668  sec
 </pre>
 </div>
 </div>
