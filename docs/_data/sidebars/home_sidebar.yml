@@ -18,6 +18,9 @@ entries:
     - output: web,pdf
       title: Analyzers
       url: analyzers.html
+    - output: web,pdf
+      title: Examples
+      url: examples.html
     output: web
     title: causalnlp
   output: web

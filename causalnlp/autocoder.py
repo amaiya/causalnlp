@@ -41,12 +41,21 @@ class Autocoder:
             df[col] = (df[col] >= threshold).astype(int)
         return df
 
+    def _check_columns(self, labels, df):
+        """check columns"""
+        cols = df.columns.values
+        for l in labels:
+            if l in cols:
+                raise ValueError('There is already a column named %s in your DataFrame.' % (l))
+
 
     def code_sentiment(self, docs, df, batch_size=8, binarize=False, threshold=0.5):
         """
         Autocodes text for positive or negative sentiment
         """
         labels = ['negative', 'positive']
+        self._check_columns(labels, df)
+
         results = self.zsl.predict(docs, labels=labels, include_labels=True, multilabel=False,
                               batch_size=batch_size,
                               nli_template="The sentiment of this movie review is {}.")
@@ -59,6 +68,8 @@ class Autocoder:
         Autocodes text for emotion
         """
         labels = ['joy', 'anger', 'fear', 'sadness']
+        self._check_columns(labels, df)
+
         results = self.zsl.predict(docs, labels=labels, include_labels=True, multilabel=False,
                               batch_size=batch_size,
                               nli_template="The emotion of this text is {}.")
@@ -71,6 +82,7 @@ class Autocoder:
         Autocodes text for user-specified topics.
         The `label` field is the name of the topic as a string (or a list of them.)
         """
+        self._check_columns(labels, df)
 
         results = self.zsl.predict(docs, labels=labels, include_labels=True, batch_size=8)
         df = self._format_to_df(results, df)

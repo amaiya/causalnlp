@@ -148,6 +148,13 @@ class CausalInferenceModel:
                                                                    else metalearner_reg_dict[metalearner_type]
         if metalearner_type in ['t-learner', 's-learner']:
             model = metalearner_class(learner=learner,control_name=0)
+        elif metalearner_type in ['x-learner']:
+            model = metalearner_class(
+                                      control_outcome_learner=learner,
+                                      treatment_outcome_learner=learner,
+                                      control_effect_learner=LGBMRegressor(),
+                                      treatment_effect_learner=LGBMRegressor(),
+                                      control_name=0)
         else:
             model = metalearner_class(outcome_learner=learner,
                                       effect_learner=LGBMRegressor(),
