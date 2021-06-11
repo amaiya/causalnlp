@@ -69,15 +69,11 @@ nb_path: "nbs/00_causalinference.ipynb"
 <li><strong>text_col</strong> - (optional) text column containing the strings (e.g., articles, reviews, emails).</li>
 <li><strong>ignore_cols</strong> - columns to ignore in the analysis</li>
 <li><strong>include_cols</strong> - columns to include as covariates (e.g., possible confounders)</li>
-<li><strong>treatment_effect_col</strong> - name of column to hold causal effect estimations.
-<pre><code>                       Does not need to exist.  Created by CausalNLP.</code></pre>
-</li>
-<li><strong>metalearner_type</strong> - metalearner model to use.
-<pre><code>                  One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (default:'t-learner').
-                  Default: 't-learner'</code></pre>
-</li>
+<li><strong>treatment_effect_col</strong> - name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.</li>
+<li><strong>metalearner_type</strong> - metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')</li>
 <li><strong>learner</strong> - an instance of a custom learner.  If None, a default LightGBM will be used.
-<pre><code>           Example: `learner = LGBMClassifier(n_estimators=1000)`</code></pre>
+<pre><code>           # Example:
+           learner = LGBMClassifier(n_estimators=1000)</code></pre>
 </li>
 <li><strong>min_df</strong> - min_df parameter used for text processing using sklearn</li>
 <li><strong>max_df</strong> - max_df parameter used for text procesing using sklearn</li>

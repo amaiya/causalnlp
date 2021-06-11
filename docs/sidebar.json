@@ -2,7 +2,6 @@
   "causalnlp": {
     "Overview": "/",
     "Causal Inference": "causalinference.html",
-    "Auto Coder": "autocoder.html",
-    "Examples": "examples.html"
+    "Auto Coder": "autocoder.html"
   }
 }

@@ -40,13 +40,11 @@ class CausalInferenceModel:
     * **text_col** - (optional) text column containing the strings (e.g., articles, reviews, emails).
     * **ignore_cols** - columns to ignore in the analysis
     * **include_cols** - columns to include as covariates (e.g., possible confounders)
-    * **treatment_effect_col** - name of column to hold causal effect estimations.
-                                 Does not need to exist.  Created by CausalNLP.
-    * **metalearner_type** - metalearner model to use.
-                            One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (default:'t-learner').
-                            Default: 't-learner'
+    * **treatment_effect_col** - name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.
+    * **metalearner_type** - metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
     * **learner** - an instance of a custom learner.  If None, a default LightGBM will be used.
-                     Example: `learner = LGBMClassifier(n_estimators=1000)`
+                     # Example:
+                     learner = LGBMClassifier(n_estimators=1000)
     * **min_df** - min_df parameter used for text processing using sklearn
     * **max_df** - max_df parameter used for text procesing using sklearn
     * **stop_words** - stop words used for text processing (from sklearn)
