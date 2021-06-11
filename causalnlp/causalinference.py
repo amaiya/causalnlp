@@ -32,23 +32,31 @@ metalearner_reg_dict = {'t-learner' : BaseTRegressor,
                         's-learner' : BaseSRegressor}
 
 class CausalInferenceModel:
-    """
-    Infers causality from the data contained in `df` using a metalearner.
-    * **df** - pandas.DataFrame containing dataset
-    * **treatment_col** - treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
-    * **outcome_col** - outcome variable; column should contain the categorical or numeric outcome values
-    * **text_col** - (optional) text column containing the strings (e.g., articles, reviews, emails).
-    * **ignore_cols** - columns to ignore in the analysis
-    * **include_cols** - columns to include as covariates (e.g., possible confounders)
-    * **treatment_effect_col** - name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.
-    * **metalearner_type** - metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
-    * **learner** - an instance of a custom learner.  If None, a default LightGBM will be used.
-                     # Example:
-                     learner = LGBMClassifier(n_estimators=1000)
-    * **min_df** - min_df parameter used for text processing using sklearn
-    * **max_df** - max_df parameter used for text procesing using sklearn
-    * **stop_words** - stop words used for text processing (from sklearn)
-    * **verbose** - If 1, print informational messages.  If 0, suppress.
+    """Infers causality from the data contained in `df` using a metalearner.
+    Usage:
+
+    ```python
+    >>> cm = CausalInferenceModel(df,
+                                  treatment_col='Is_Male?',
+                                  outcome_col='Post_Shared?', text_col='Post_Text',
+                                  ignore_cols=['id', 'email'])
+        cm.fit()
+    ```
+    * **df** : pandas.DataFrame containing dataset
+    * **treatment_col** : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
+    * **outcome_col** : outcome variable; column should contain the categorical or numeric outcome values
+    * **text_col** : (optional) text column containing the strings (e.g., articles, reviews, emails).
+    * **ignore_cols** : columns to ignore in the analysis
+    * **include_cols** : columns to include as covariates (e.g., possible confounders)
+    * **treatment_effect_col** : name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.
+    * **metalearner_type** : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
+    * **learner** : an instance of a custom learner.  If None, a default LightGBM will be used.
+        # Example
+         learner = LGBMClassifier(n_estimators=1000)
+    * **min_df** : min_df parameter used for text processing using sklearn
+    * **max_df** : max_df parameter used for text procesing using sklearn
+    * **stop_words** : stop words used for text processing (from sklearn)
+    * **verbose** : If 1, print informational messages.  If 0, suppress.
     """
     def __init__(self,
                  df,
