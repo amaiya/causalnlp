@@ -15,6 +15,12 @@ entries:
     - output: web,pdf
       title: Auto Coder
       url: autocoder.html
+    - output: web,pdf
+      title: Analyzers - Zero-Shot Learning
+      url: analyzers.zsl.html
+    - output: web,pdf
+      title: Analyzers - Zero-Shot Learning2
+      url: analyzers.zsl2.html
     output: web
     title: causalnlp
   output: web

@@ -5,12 +5,14 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "metalearner_cls_dict": "00_causalinference.ipynb",
          "metalearner_reg_dict": "00_causalinference.ipynb",
-         "list2chunks": "01_autocoder.ipynb",
-         "ZeroShotClassifier": "01_autocoder.ipynb",
+         "list2chunks": "02_analyzers.zsl2.ipynb",
+         "ZeroShotClassifier": "02_analyzers.zsl2.ipynb",
          "Autocoder": "01_autocoder.ipynb"}
 
 modules = ["causalinference.py",
-           "autocoder.py"]
+           "autocoder.py",
+           "analyzers/zsl.py",
+           "analyzers/zsl2.py"]
 
 doc_url = "https://amaiya.github.io/causalnlp/"
 
