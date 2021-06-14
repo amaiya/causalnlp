@@ -184,7 +184,6 @@ nb_path: "nbs/index.ipynb"
                          <span class="n">treatment_col</span><span class="o">=</span><span class="s1">&#39;T_ac&#39;</span><span class="p">,</span> <span class="n">outcome_col</span><span class="o">=</span><span class="s1">&#39;Y_sim&#39;</span><span class="p">,</span> <span class="n">text_col</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">,</span>
                          <span class="n">include_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C_true&#39;</span><span class="p">])</span>
 <span class="n">cm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">cm</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -201,21 +200,11 @@ nb_path: "nbs/index.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.1270413398742676  sec
+preprocess time:  1.1067862510681152  sec
 start fitting causal inference model
-time to fit causal inference model:  13.988035678863525  sec
+time to fit causal inference model:  10.546765327453613  sec
 </pre>
 </div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&#39;ate&#39;: 0.1309311542209525}</pre>
-</div>
-
 </div>
 
 </div>
