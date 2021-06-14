@@ -16,6 +16,7 @@ from lightgbm import LGBMClassifier, LGBMRegressor
 from sklearn.linear_model import LogisticRegression, LinearRegression
 import numpy as np
 import warnings
+from copy import deepcopy
 
 # from xgboost import XGBRegressor
 # from causalml.inference.meta import XGBTRegressor, MLPTRegressor
@@ -48,39 +49,46 @@ class CausalInferenceModel:
     **Parameters:**
 
     * **df** : pandas.DataFrame containing dataset
+    * **metalearner_type** : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
+
     * **treatment_col** : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
     * **outcome_col** : outcome variable; column should contain the categorical or numeric outcome values
     * **text_col** : (optional) text column containing the strings (e.g., articles, reviews, emails).
     * **ignore_cols** : columns to ignore in the analysis
     * **include_cols** : columns to include as covariates (e.g., possible confounders)
     * **treatment_effect_col** : name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.
-    * **metalearner_type** : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
     * **learner** : an instance of a custom learner.  If None, a default LightGBM will be used.
         # Example
-         learner = LGBMClassifier(n_estimators=1000)
+         learner = LGBMClassifier(num_leaves=1000)
+    * **effect_learner**: used for x-learner/r-learner and must be regression model
     * **min_df** : min_df parameter used for text processing using sklearn
     * **max_df** : max_df parameter used for text procesing using sklearn
+    * **ngram_range**: ngrams used for text vectorization. default: (1,1)
     * **stop_words** : stop words used for text processing (from sklearn)
     * **verbose** : If 1, print informational messages.  If 0, suppress.
     """
     def __init__(self,
                  df,
+                 metalearner_type='t-learner',
                  treatment_col='treatment',
                  outcome_col='outcome',
                  text_col=None,
                  ignore_cols=[],
                  include_cols=[],
                  treatment_effect_col = 'treatment_effect',
-                 metalearner_type='t-learner',
                  learner = None,
+                 effect_learner=None,
                  min_df=0.05,
                  max_df=0.5,
+                 ngram_range=(1,1),
                  stop_words='english',
                  verbose=1):
         """
         constructor
         """
-
+        metalearner_list = list(metalearner_cls_dict.keys())
+        if metalearner_type not in metalearner_list:
+            raise ValueError('metalearner_type is required and must be one of: %s' % (metalearner_list))
         self.treatment_col = treatment_col
         self.outcome_col = outcome_col
         self.text_col = text_col
@@ -90,6 +98,7 @@ class CausalInferenceModel:
         self.df = df.copy()
         self.min_df = 0.05
         self.max_df = 0.5
+        self.ngram_range = ngram_range
         self.stop_words = stop_words
         if not isinstance(ignore_cols, list):
             raise ValueError('ignore_cols must be a list.')
@@ -124,24 +133,23 @@ class CausalInferenceModel:
 
         # setup model
         self.model = self._create_metalearner(metalearner_type=self.metalearner_type,
-                                             supplied_learner=learner)
+                                             supplied_learner=learner,
+                                             supplied_effect_learner=effect_learner)
 
 
 
-    def _create_metalearner(self, metalearner_type='t-learner', supplied_learner=None):
+    def _create_metalearner(self, metalearner_type='t-learner',
+                            supplied_learner=None, supplied_effect_learner=None):
         # set learner
         default_learner = None
-        if metalearner_type == 's-learner':
-            if self.is_classification:
-                default_learner =  LogisticRegression()
-            else:
-                default_learner = LinearRegression()
+        if self.is_classification:
+            default_learner = LGBMClassifier()
         else:
-            if self.is_classification:
-                default_learner = LGBMClassifier()
-            else:
-                default_learner =  LGBMRegressor()
+            default_learner =  LGBMRegressor()
+        default_effect_learner = LGBMRegressor()
         learner = default_learner if supplied_learner is None else supplied_learner
+        effect_learner = default_effect_learner if supplied_effect_learner is None else\
+                         supplied_effect_learner
 
         # set metalearner
         metalearner_class = metalearner_cls_dict[metalearner_type] if self.is_classification \
@@ -150,14 +158,14 @@ class CausalInferenceModel:
             model = metalearner_class(learner=learner,control_name=0)
         elif metalearner_type in ['x-learner']:
             model = metalearner_class(
-                                      control_outcome_learner=learner,
-                                      treatment_outcome_learner=learner,
-                                      control_effect_learner=LGBMRegressor(),
-                                      treatment_effect_learner=LGBMRegressor(),
+                                      control_outcome_learner=deepcopy(learner),
+                                      treatment_outcome_learner=deepcopy(learner),
+                                      control_effect_learner=deepcopy(effect_learner),
+                                      treatment_effect_learner=deepcopy(effect_learner),
                                       control_name=0)
         else:
-            model = metalearner_class(outcome_learner=learner,
-                                      effect_learner=LGBMRegressor(),
+            model = metalearner_class(outcome_learner=deepcopy(learner),
+                                      effect_learner=deepcopy(effect_learner),
                                       control_name=0)
         return model
 
@@ -205,8 +213,8 @@ class CausalInferenceModel:
                         f'Since there is already a text_col specified ({self.text_col}), '+\
                         f'you should probably include this column in the "ignore_cols" list.'
                     else:
-                        err_msg = f'Column "{c}" looks like it contains free-form text. ' +\
-                        f'Please either set text_col="{c}" or add it to "ignore_cols" list.'
+                        err_msg = f'Column "{c}" looks like it contains free-form text or ' +\
+                        f'or unique values. Please either set text_col="{c}" or add it to "ignore_cols" list.'
                     raise ValueError(err_msg)
 
                 self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c,
@@ -219,7 +227,8 @@ class CausalInferenceModel:
         # step 4: for text-based confounder, use extracted vocabulary as features
         if self.text_col is not None:
             from sklearn.feature_extraction.text import TfidfVectorizer
-            tv = TfidfVectorizer(min_df=self.min_df, max_df=self.max_df, stop_words=self.stop_words)
+            tv = TfidfVectorizer(min_df=self.min_df, max_df=self.max_df,
+                                 ngram_range=self.ngram_range, stop_words=self.stop_words)
             v_features = tv.fit_transform(self.df[self.text_col])
             vocab = tv.get_feature_names()
             vocab_df = pd.DataFrame(v_features.toarray(), columns = ["v_%s" % (v) for v in vocab])
@@ -275,7 +284,6 @@ class CausalInferenceModel:
         dtype = None
 
         tmp_var = df[df[col].notnull()][col]
-        #if tmp_var.nunique()<=5: return 'cat'
         if is_numeric_dtype(tmp_var): dtype = 'numeric'
         elif is_string_dtype(tmp_var): dtype =  'string'
         else:

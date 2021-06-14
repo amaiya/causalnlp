@@ -8,7 +8,9 @@ index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "Autocoder": "01_autocoder.ipynb",
          "list2chunks": "02_analyzers.ipynb",
          "ZeroShotClassifier": "02_analyzers.ipynb",
-         "TextEncoder": "02_analyzers.ipynb"}
+         "TextEncoder": "02_analyzers.ipynb",
+         "TopicModel": "02_analyzers.ipynb",
+         "DEFAULT_TOKEN_PATTERN": "02_analyzers.ipynb"}
 
 modules = ["causalinference.py",
            "autocoder.py",

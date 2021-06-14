@@ -6,18 +6,19 @@ __all__ = ['Autocoder']
 import numpy as np
 import pandas as pd
 pd.set_option('display.max_columns', 500)
-from .analyzers import ZeroShotClassifier, TextEncoder
+from .analyzers import ZeroShotClassifier, TextEncoder, TopicModel
 
 class Autocoder:
     """
     Autocodes text fields
     """
-    def __init__(self, verbose=1):
+    def __init__(self, verbose=1, device=None):
         """
         Instantiates the Autocoder instance.
         """
         self.v = verbose
-        self.zsl = ZeroShotClassifier()
+        self.zsl = ZeroShotClassifier(device=device)
+        self.device = device
 
 
     def _format_to_df(self, results, df):
@@ -89,6 +90,22 @@ class Autocoder:
         if binarize: df = self._binarize_df(df, labels, threshold=threshold)
         return df
 
+    def code_lda_topics(self, docs, df, k=10, n_features=10000):
+        """
+        Encode texts as semantically meaningful vectors using Latent Dirichlet Alocation
+        """
+        tm = TopicModel(docs, n_topics=k, n_features=n_features)
+        tm.build(docs)
+        e = tm.doc_topics
+        elen = e.shape[1]
+        results = []
+        for row, data in enumerate(e):
+            keys = ["topic_%04d" %(i) for i in range(data.shape[0])]
+            vals = [v for v in data]
+            results.append( list(zip(keys, vals)) )
+        df = self._format_to_df(results, df)
+        return df
+
     def code_callable(self, docs, df, fn):
         """
         Autocodes text for any user-specified function
@@ -102,11 +119,12 @@ class Autocoder:
         df = self._format_to_df(results, df)
         return df
 
-    def code_vector(self, docs, df, batch_size=32, show_progress_bar=False):
+    def code_transformer(self, docs, df, batch_size=32,
+                         model_name='stsb-roberta-large', show_progress_bar=False):
         """
         Encode texts as semantically meaningful vectors using a Transformer model
         """
-        te = TextEncoder()
+        te = TextEncoder(device=self.device, model_name=model_name)
         e = te.encode(docs, batch_size=batch_size, show_progress_bar=show_progress_bar)
         elen = e.shape[1]
         results = []
