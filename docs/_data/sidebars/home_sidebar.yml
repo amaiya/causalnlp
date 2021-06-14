@@ -21,9 +21,6 @@ entries:
     - output: web,pdf
       title: Examples
       url: examples.html
-    - output: web,pdf
-      title: Experiments
-      url: experiments.html
     output: web
     title: causalnlp
   output: web
