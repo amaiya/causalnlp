@@ -49,7 +49,7 @@ nb_path: "nbs/99_examples.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="What-is-the-causal-impact-of-a-positive-review-on-product-sales-(or-views)?">What is the causal impact of a positive review on product sales (or views)?<a class="anchor-link" href="#What-is-the-causal-impact-of-a-positive-review-on-product-sales-(or-views)?"> </a></h2><p>We use a semi-simulated dataset generated from <a href="https://github.com/rpryzant/causal-text">this repo</a>. The reviews and product types are real, while the outcomes (e.g., 1=product clicked, 0=not clicked) are simulated.</p>
+<h2 id="What-is-the-causal-impact-of-a-positive-review-on-product-sales-(or-views)?">What is the causal impact of a positive review on product sales (or views)?<a class="anchor-link" href="#What-is-the-causal-impact-of-a-positive-review-on-product-sales-(or-views)?"> </a></h2><p>We use a semi-simulated dataset generated from <a href="https://github.com/rpryzant/causal-text">this repo</a>, which is available in the <code>sample_data</code> folder. The reviews and product types are real, while the outcomes (e.g., 1=product clicked, 0=not clicked) are simulated.</p>
 
 </div>
 </div>
@@ -222,7 +222,7 @@ nb_path: "nbs/99_examples.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>C_true</code> is a confounder, where 1 is an audio CD and and 0 is something else (e.g., MP3).  In this dataset, outcomes were simulated such that <code>C_true</code> is a counfounding variable for this problem.</p>
+<p><code>C_true</code> is a categorical variable, where 1 is an audio CD and and 0 is something else (e.g., MP3).  In this dataset, outcomes were simulated such that <code>C_true</code> is a counfounding variable for this problem.</p>
 
 </div>
 </div>
@@ -234,7 +234,7 @@ nb_path: "nbs/99_examples.ipynb"
 <span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_sentiment</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;T_ac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span>
 </pre></div>
-<p>We've already created this as the <code>T_ac</code> column (along with the <code>positive</code> and <code>negative</code> columns), so invoking the above is not needed.</p>
+<p>We've already created this as the <code>T_ac</code> column (along with the <code>positive</code> and <code>negative</code> columns), so invoking the above is not needed. Note that <code>T_ac</code> is an imperfect approximation of <code>T_true</code>. In CausalNLP, we can include the raw text as covariates to improve our estimates.</p>
 <p>Let's fit the causal inference model.  We will adjust for both <code>C_true</code> and the raw text of the review to minimize bias from confounding. CausalNLP supports the following metalearners: S-Learner, T-Learner, X-Learner, and R-Learner. See <a href="https://arxiv.org/abs/1706.03461">this paper</a> for more information on these. We will use the T-Learner as the metalearner here. By default, T-Learners use LightGBM classifiers with 31 leaves.  Let's increase the number of leaves to 500. In practice, you can supply a learner with hyperparameters that you've tuned beforehand to accurately predict the outcome.</p>
 
 </div>
@@ -416,7 +416,7 @@ time to fit causal inference model:  10.414806127548218  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>These are the attributes most predictive of individualized treatment effects across observations.  Features begnning with <code>v_</code> are word (or vocabulary) features.  We see that words like "music", "cd", and "love" in addition to the categorical attribute <code>C_true</code> (the known confounder which is 1 for audio CDs) are most predictive if individualized causal effects.</p>
+<p>We can use the <code>interpret</code> method to identify the attributes most predictive of individualized treatment effects across observations.  Features begnning with <code>v_</code> are word (or vocabulary) features.  We see that words like "music", "cd", and "love" in addition to the categorical attribute <code>C_true</code> (the known confounder which is 1 for audio CDs) are most predictive if individualized causal effects.</p>
 
 </div>
 </div>
