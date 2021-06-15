@@ -38,45 +38,34 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1211283206939697  sec
+    preprocess time:  1.1216762065887451  sec
     start fitting causal inference model
-    time to fit causal inference model:  10.984754800796509  sec
+    time to fit causal inference model:  9.701336860656738  sec
 
 
 The average treatment effect (ATE):
 
 ```python
-cm.estimate_ate()
+print( cm.estimate_ate() )
 ```
 
-
-
-
     {'ate': 0.1309311542209525}
-
 
 
 The conditional average treatment effect (CATE) for those reviews that mention the word "toddler":
 
 ```python
-cm.estimate_ate(df['text'].str.contains('toddler'))
+print( cm.estimate_ate(df['text'].str.contains('toddler')) )
 ```
 
-
-
-
     {'ate': 0.15559234254638685}
-
 
 
 Features most predictive of the treatment effects (e.g., increase in probability of clicking product):
 
 ```python
-cm.interpret(plot=False)[1][:10]
+print( cm.interpret(plot=False)[1][:10] )
 ```
-
-
-
 
     v_music    0.079042
     v_cd       0.066838
@@ -89,7 +78,6 @@ cm.interpret(plot=False)[1][:10]
     v_great    0.029918
     v_heard    0.028373
     dtype: float64
-
 
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD.
