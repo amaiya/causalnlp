@@ -15,11 +15,11 @@ import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
 
-This is a semi-simulated dataset from [here](https://github.com/rpryzant/causal-text).
+The file `music_seed50.tsv` is a semi-simulated dataset from [here](https://github.com/rpryzant/causal-text). Columns of relevance include:
 - `C_true`:known confounding catgorical variable (1=audio CD, 0=other)
 - `Y_sim`: simulated outcome, where 1 means product was clicked and 0 means not. 
-- `T_true`: 1 means rating less than 3, 0 means rating of 5.
-- `T_ac`: An approximation of true review sentiment (`T_true`) created with `causalnlp.autocoder.Autocoder`.
+- `T_true`: 1 means rating less than 3, 0 means rating of 5, where `T_true` affects the outcome `Y_sim`.
+- `T_ac`: An approximation of true review sentiment (`T_true`) created with `Autocoder`.
 
 We'll pretend the rating and `T_true` are unobserved and only use `T_ac` as the treatment variable. Using the `text_col` parameter, we include raw text as covariates for which adjustments can be made to improve causal estimates.
 
