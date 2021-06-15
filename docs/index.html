@@ -77,7 +77,7 @@ nb_path: "nbs/index.ipynb"
 <p>The file <code>music_seed50.tsv</code> is a semi-simulated dataset from <a href="https://github.com/rpryzant/causal-text">here</a>. Columns of relevance include:</p>
 <ul>
 <li><code>Y_sim</code>: simulated outcome, where 1 means product was clicked and 0 means not. </li>
-<li><code>C_true</code>:known confounding catgorical variable (1=audio CD, 0=other)</li>
+<li><code>C_true</code>:confounding categorical variable (1=audio CD, 0=other)</li>
 <li><code>T_true</code>: 1 means rating less than 3, 0 means rating of 5, where <code>T_true</code> affects the outcome <code>Y_sim</code>.</li>
 <li><code>T_ac</code>: An approximation of true review sentiment (<code>T_true</code>) created with <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a>.</li>
 </ul>

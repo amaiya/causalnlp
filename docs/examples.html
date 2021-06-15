@@ -239,14 +239,14 @@ nb_path: "nbs/99_examples.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>C_true</code> is a categorical variable, where 1 is an audio CD and and 0 is something else (e.g., MP3).  In this dataset, outcomes were simulated such that <code>C_true</code> is a counfounding variable for this problem.</p>
+<p><code>Y_sim</code> is the simulated outcome indicating whether or not the product was clicked.  <code>C_true</code> is a categorical variable, where 1 is an audio CD and and 0 is something else (e.g., MP3).  In this dataset, outcomes were simulated such that <code>C_true</code> is a counfounding variable for this problem.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The treatment is whether or not the review is positive.  Let's pretend we don't have a rating and need to infer this from text using the <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a>. This can be done with:</p>
+<p>The treatment is whether or not the review is positive, which affects <code>Y_sim</code>.  Let's pretend we don't have a rating and need to infer this from text using the <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a>. This can be done with:</p>
 <div class="highlight"><pre><span></span><span class="n">ac</span> <span class="o">=</span> <span class="n">Autocoder</span><span class="p">()</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">code_sentiment</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;T_ac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span>
