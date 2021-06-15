@@ -15,16 +15,6 @@ import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
 
-```python
-print(df.head(2).to_markdown())
-```
-
-    |    |   index |         id |   rating | product   | text                                                                                                                                     | summary                          |   price |   T_true |   C_true |   Y_sim |   negative |   positive |   T_ac |
-    |---:|--------:|-----------:|---------:|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|--------:|---------:|---------:|--------:|-----------:|-----------:|-------:|
-    |  0 |       7 | 0001388703 |        1 | mp3 music | buy the cd.  do not buy the mp3 album.  download is no longer available.  but you don't find that out until after you have purchased it. | Buy the CD.  Do not buy the MP3. |   13.01 |        0 |        0 |       0 | 0.548733   |   0.451267 |      0 |
-    |  1 |       8 | 0001388703 |        5 | mp3 music | takes me back to my childhood!                                                                                                           | Love it!                         |   13.01 |        1 |        0 |       0 | 0.00837317 |   0.991627 |      1 |
-
-
 This is a semi-simulated dataset from [here](https://github.com/rpryzant/causal-text).
 - `C_true`:known confounding catgorical variable (1=audio CD, 0=other)
 - `Y_sim`: simulated outcome, where 1 means product was clicked and 0 means not. 
@@ -47,9 +37,9 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1067862510681152  sec
+    preprocess time:  1.1460130214691162  sec
     start fitting causal inference model
-    time to fit causal inference model:  10.546765327453613  sec
+    time to fit causal inference model:  15.419760704040527  sec
 
 
 The average treatment effect (ATE):

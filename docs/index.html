@@ -72,40 +72,6 @@ nb_path: "nbs/index.ipynb"
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">())</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>|    |   index |         id |   rating | product   | text                                                                                                                                     | summary                          |   price |   T_true |   C_true |   Y_sim |   negative |   positive |   T_ac |
-|---:|--------:|-----------:|---------:|:----------|:-----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|--------:|---------:|---------:|--------:|-----------:|-----------:|-------:|
-|  0 |       7 | 0001388703 |        1 | mp3 music | buy the cd.  do not buy the mp3 album.  download is no longer available.  but you don&#39;t find that out until after you have purchased it. | Buy the CD.  Do not buy the MP3. |   13.01 |        0 |        0 |       0 | 0.548733   |   0.451267 |      0 |
-|  1 |       8 | 0001388703 |        5 | mp3 music | takes me back to my childhood!                                                                                                           | Love it!                         |   13.01 |        1 |        0 |       0 | 0.00837317 |   0.991627 |      1 |
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This is a semi-simulated dataset from <a href="https://github.com/rpryzant/causal-text">here</a>.</p>
@@ -150,9 +116,9 @@ nb_path: "nbs/index.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.1067862510681152  sec
+preprocess time:  1.1460130214691162  sec
 start fitting causal inference model
-time to fit causal inference model:  10.546765327453613  sec
+time to fit causal inference model:  15.419760704040527  sec
 </pre>
 </div>
 </div>
