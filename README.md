@@ -93,11 +93,3 @@ cm.interpret(plot=False)[1][:10]
 
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD.
-
-```python
-cm.interpret(plot=True)
-```
-
-
-![png](docs/images/output_14_0.png)
-
