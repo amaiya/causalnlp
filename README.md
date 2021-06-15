@@ -1,5 +1,5 @@
 # CausalNLP
-> CausalNLP is a practical toolkit for causal inference with text.
+> CausalNLP is a practical toolkit for causal inference with text
 
 
 ## Install
