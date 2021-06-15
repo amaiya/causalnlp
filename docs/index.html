@@ -6,8 +6,8 @@ title: CausalNLP
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "**CausalNLP** is a practical toolkit for causal inference with **text**"
-description: "**CausalNLP** is a practical toolkit for causal inference with **text**"
+summary: "CausalNLP is a practical toolkit for causal inference with text."
+description: "CausalNLP is a practical toolkit for causal inference with text."
 nb_path: "nbs/index.ipynb"
 ---
 <!--
@@ -37,7 +37,10 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>pip install causalnlp</code></p>
+<ol>
+<li><code>pip install -U pip</code></li>
+<li><code>pip install causalnlp</code></li>
+</ol>
 
 </div>
 </div>
@@ -116,9 +119,9 @@ nb_path: "nbs/index.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.1460130214691162  sec
+preprocess time:  1.1327152252197266  sec
 start fitting causal inference model
-time to fit causal inference model:  15.419760704040527  sec
+time to fit causal inference model:  18.70013403892517  sec
 </pre>
 </div>
 </div>
@@ -209,6 +212,63 @@ time to fit causal inference model:  15.419760704040527  sec
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Features most predictive of the treatment effects (e.g., increase in probability of clicking product):</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">interpret</span><span class="p">(</span><span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>v_music    0.079042
+v_cd       0.066838
+v_album    0.055168
+v_like     0.040784
+v_love     0.040635
+C_true     0.039949
+v_just     0.035671
+v_song     0.035362
+v_great    0.029918
+v_heard    0.028373
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Features with the <code>v_</code> prefix are word features. <code>C_true</code> is the categorical variable indicating whether or not the product is a CD.</p>
+
+</div>
+</div>
+</div>
 </div>
  
 

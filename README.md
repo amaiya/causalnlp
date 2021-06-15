@@ -1,10 +1,11 @@
 # CausalNLP
-> **CausalNLP** is a practical toolkit for causal inference with **text**
+> CausalNLP is a practical toolkit for causal inference with text.
 
 
 ## Install
 
-`pip install causalnlp`
+1. `pip install -U pip`
+2. `pip install causalnlp`
 
 ## Usage
 
@@ -37,9 +38,9 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1460130214691162  sec
+    preprocess time:  1.1327152252197266  sec
     start fitting causal inference model
-    time to fit causal inference model:  15.419760704040527  sec
+    time to fit causal inference model:  18.70013403892517  sec
 
 
 The average treatment effect (ATE):
@@ -67,3 +68,28 @@ cm.estimate_ate(df['text'].str.contains('toddler'))
     {'ate': 0.15559234254638685}
 
 
+
+Features most predictive of the treatment effects (e.g., increase in probability of clicking product):
+
+```python
+cm.interpret(plot=False)[1][:10]
+```
+
+
+
+
+    v_music    0.079042
+    v_cd       0.066838
+    v_album    0.055168
+    v_like     0.040784
+    v_love     0.040635
+    C_true     0.039949
+    v_just     0.035671
+    v_song     0.035362
+    v_great    0.029918
+    v_heard    0.028373
+    dtype: float64
+
+
+
+Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD.
