@@ -53,7 +53,7 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-is-the-causal-impact-of-a-positive-review-on-a-product-click?">What is the causal impact of a positive review on a product click?<a class="anchor-link" href="#What-is-the-causal-impact-of-a-positive-review-on-a-product-click?"> </a></h3>
+<h3 id="Example:-What-is-the-causal-impact-of-a-positive-review-on-a-product-click?">Example: What is the causal impact of a positive review on a product click?<a class="anchor-link" href="#Example:-What-is-the-causal-impact-of-a-positive-review-on-a-product-click?"> </a></h3>
 </div>
 </div>
 </div>
@@ -82,9 +82,10 @@ nb_path: "nbs/index.ipynb"
 <li><code>Y_sim</code>: simulated outcome, where 1 means product was clicked and 0 means not. </li>
 <li><code>C_true</code>:confounding categorical variable (1=audio CD, 0=other)</li>
 <li><code>T_true</code>: 1 means rating less than 3, 0 means rating of 5, where <code>T_true</code> affects the outcome <code>Y_sim</code>.</li>
-<li><code>T_ac</code>: An approximation of true review sentiment (<code>T_true</code>) created with <a href="/causalnlp/autocoder.html#Autocoder"><code>Autocoder</code></a>.</li>
+<li><code>T_ac</code>: An approximation of true review sentiment (<code>T_true</code>) created with <code>causalnlp.autocoder.Autocoder</code>.</li>
 </ul>
-<p>We'll pretend the rating and <code>T_true</code> are unobserved and only use <code>T_ac</code> as the treatment variable. Using the <code>text_col</code> parameter, we include raw text as covariates for which adjustments can be made to improve causal estimates.</p>
+<p>We'll pretend the true sentiment (i.e., review rating and <code>T_true</code>) is hidden and only use <code>T_ac</code> as the treatment variable.</p>
+<p>Using the <code>text_col</code> parameter, we include the raw review text as another "controlled-for" variable to improve causal estimates.</p>
 
 </div>
 </div>
@@ -134,6 +135,7 @@ time to fit causal inference model:  9.701336860656738  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>We can calculate the average treatment effect to find that a positive review increases the probability of a click by 13 percentage points in this dataset.</p>
 <p>The average treatment effect (ATE):</p>
 
 </div>

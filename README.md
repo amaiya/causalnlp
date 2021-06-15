@@ -9,7 +9,7 @@
 
 ## Usage
 
-### What is the causal impact of a positive review on a product click?
+### Example: What is the causal impact of a positive review on a product click?
 
 ```python
 import pandas as pd
@@ -20,9 +20,11 @@ The file `music_seed50.tsv` is a semi-simulated dataset from [here](https://gith
 - `Y_sim`: simulated outcome, where 1 means product was clicked and 0 means not. 
 - `C_true`:confounding categorical variable (1=audio CD, 0=other)
 - `T_true`: 1 means rating less than 3, 0 means rating of 5, where `T_true` affects the outcome `Y_sim`.
-- `T_ac`: An approximation of true review sentiment (`T_true`) created with `Autocoder`.
+- `T_ac`: An approximation of true review sentiment (`T_true`) created with `causalnlp.autocoder.Autocoder`.
 
-We'll pretend the rating and `T_true` are unobserved and only use `T_ac` as the treatment variable. Using the `text_col` parameter, we include raw text as covariates for which adjustments can be made to improve causal estimates.
+We'll pretend the true sentiment (i.e., review rating and `T_true`) is hidden and only use `T_ac` as the treatment variable. 
+
+Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable to improve causal estimates.
 
 ```python
 from causalnlp.causalinference import CausalInferenceModel
@@ -42,6 +44,8 @@ cm.fit()
     start fitting causal inference model
     time to fit causal inference model:  9.701336860656738  sec
 
+
+We can calculate the average treatment effect to find that a positive review increases the probability of a click by 13 percentage points in this dataset.
 
 The average treatment effect (ATE):
 
@@ -80,4 +84,4 @@ print( cm.interpret(plot=False)[1][:10] )
     dtype: float64
 
 
-Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD.
+Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD. 
