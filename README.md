@@ -38,9 +38,9 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1327152252197266  sec
+    preprocess time:  1.1211283206939697  sec
     start fitting causal inference model
-    time to fit causal inference model:  18.70013403892517  sec
+    time to fit causal inference model:  10.984754800796509  sec
 
 
 The average treatment effect (ATE):
@@ -93,3 +93,11 @@ cm.interpret(plot=False)[1][:10]
 
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD.
+
+```python
+cm.interpret(plot=True)
+```
+
+
+![png](docs/images/output_14_0.png)
+
