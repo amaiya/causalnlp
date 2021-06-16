@@ -87,3 +87,19 @@ print( cm.interpret(plot=False)[1][:10] )
 
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD. 
+
+## How to Cite
+
+If using CausalNLP in a paper, you can cite this paper:
+
+```
+@article{maiya2021causalnlp,
+    title={CausalNLP: A Practical Toolkit for Causal Inference with Text},
+    author={Arun S. Maiya},
+    year={2021},
+    eprint={2106.08043},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    journal={arXiv preprint arXiv:2106.08043},
+}
+```
