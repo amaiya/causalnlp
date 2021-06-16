@@ -90,7 +90,7 @@ Features with the `v_` prefix are word features. `C_true` is the categorical var
 
 ## How to Cite
 
-If using CausalNLP in a paper, you can cite this paper:
+Please cite [the following paper](https://arxiv.org/abs/2106.08043) when using CausalNLP in your work:
 
 ```
 @article{maiya2021causalnlp,
