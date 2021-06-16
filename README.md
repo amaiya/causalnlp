@@ -88,6 +88,9 @@ print( cm.interpret(plot=False)[1][:10] )
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD. 
 
+## Documentation
+API documentation and additional usage examples are available at: https://amaiya.github.io/causalnlp/
+
 ## How to Cite
 
 Please cite [the following paper](https://arxiv.org/abs/2106.08043) when using CausalNLP in your work:
