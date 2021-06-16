@@ -20,11 +20,11 @@ The file `music_seed50.tsv` is a semi-simulated dataset from [here](https://gith
 - `Y_sim`: simulated outcome, where 1 means product was clicked and 0 means not. 
 - `C_true`:confounding categorical variable (1=audio CD, 0=other)
 - `T_true`: 1 means rating less than 3, 0 means rating of 5, where `T_true` affects the outcome `Y_sim`.
-- `T_ac`: An approximation of true review sentiment (`T_true`) created with `causalnlp.autocoder.Autocoder`.
+- `T_ac`: An approximation of true review sentiment (`T_true`) created with [Autocoder](https://amaiya.github.io/causalnlp/autocoder.html).
 
 We'll pretend the true sentiment (i.e., review rating and `T_true`) is hidden and only use `T_ac` as the treatment variable. 
 
-Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable to improve causal estimates.
+Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable.
 
 ```
 from causalnlp.causalinference import CausalInferenceModel
