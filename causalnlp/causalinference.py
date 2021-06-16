@@ -187,11 +187,6 @@ class CausalInferenceModel:
         self.feature_names = [c for c in df.columns.values \
                              if c not in [self.treatment_col,
                                           self.outcome_col, self.text_col]+self.ignore_cols]
-        #if self.text_col is not None and self.text_col in self.feature_names:
-        #    warnings.warn(f'Since you specified text_col="{self.text_col}", other columns that are not ' +\
-        #                  'treatments or outcomes are ignored and the metalearner will use ' +\
-        #                  'a text classifier/regressor as the base learner.')
-        #    self.feature_names = [self.text_col]
         self.x = df[self.feature_names].copy()
         self.y = df[self.outcome_col].copy()
         self.treatment = df[self.treatment_col].copy()
