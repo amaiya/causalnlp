@@ -43,9 +43,9 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.129953145980835  sec
+    preprocess time:  1.1239838600158691  sec
     start fitting causal inference model
-    time to fit causal inference model:  16.049834489822388  sec
+    time to fit causal inference model:  10.134298324584961  sec
 
 
 #### Estimating Treatment Effects
@@ -72,7 +72,33 @@ print( cm.estimate_ate(df['text'].str.contains('toddler')) )
     {'ate': 0.15559234254638685}
 
 
-Features most predictive of the treatment effects (e.g., increase in probability of clicking product):
+ We can also estimate **individualized treatment effects** (or **ITE**) for new observations using `CausalInfernceModel.predict`.  Make sure the supplied DataFrame contains the right columns.
+
+```
+cm.get_required_columns()
+```
+
+
+
+
+    ['T_ac', 'C_true', 'text']
+
+
+
+```
+test_df = pd.DataFrame({
+    'T_ac' : [1],
+    'C_true' : [1],
+    'text' : ['I never bought this album, but I love his music and will soon!']
+      })
+effect = cm.predict(test_df)
+print(effect)
+```
+
+    [[0.80538201]]
+
+
+Features most predictive of the treatment effects (i.e., probability of clicking product):
 
 ```
 print( cm.interpret(plot=False)[1][:10] )

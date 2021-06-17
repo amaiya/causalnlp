@@ -34,6 +34,7 @@ class DataframePreprocessor:
         # these variables set by preprocess
         self.feature_names = None
         self.feature_names_one_hot = None
+        self.feature_types = {}
         self.cat_dict = {}
         self.tv = None
         self.is_classification = None
@@ -93,20 +94,22 @@ class DataframePreprocessor:
             self.feature_names = [c for c in df.columns.values \
                                   if c not in [self.treatment_col,
                                               self.outcome_col, self.text_col]+self.ignore_cols]
+            for c in self.feature_names:
+                self.feature_types[c] = self._check_type(df, c)['dtype']
         X = df[self.feature_names].copy()
         Y = df[self.outcome_col].copy() if training else None
         T = df[self.treatment_col].copy()
 
         # step 2: fill empty values on x
         for c in self.feature_names:
-            if self._check_type(df, c)['dtype'] =='string': X[c] = X[c].fillna(na_cat_value)
-            if self._check_type(df, c)['dtype']=='numeric': X[c] = X[c].fillna(na_cont_value)
-
+            dtype = self.feature_types[c]
+            if dtype == 'string': X[c] = X[c].fillna(na_cat_value)
+            if dtype == 'numeric': X[c] = X[c].fillna(na_cont_value)
 
         # step 3: one-hot encode categorial features
         for c in self.feature_names:
             if c == self.text_col: continue
-            if self._check_type(df, c)['dtype']=='string':
+            if self.feature_types[c] == 'string':
                 if df.shape[0] > 100 and df[c].nunique()/df.shape[0] > 0.5:
                     if self.text_col is not None:
                         err_msg = f'Column "{c}" looks like it contains free-form text. ' +\
@@ -118,7 +121,7 @@ class DataframePreprocessor:
                     raise ValueError(err_msg)
 
                 if training:
-                    self.cat_dict[c] = sorted(df[c].unique())
+                    self.cat_dict[c] = sorted(X[c].unique())
                     catcol = X[c]
                 else:
                     #REF: https://stackoverflow.com/a/37451867/13550699
@@ -126,6 +129,7 @@ class DataframePreprocessor:
                 X = X.merge(pd.get_dummies(catcol, prefix = c,
                                                      drop_first=False),
                                                      left_index=True, right_index=True)
+
                 del X[c]
         self.feature_names_one_hot = X.columns
 

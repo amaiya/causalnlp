@@ -122,9 +122,9 @@ nb_path: "nbs/index.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.129953145980835  sec
+preprocess time:  1.1239838600158691  sec
 start fitting causal inference model
-time to fit causal inference model:  16.049834489822388  sec
+time to fit causal inference model:  10.134298324584961  sec
 </pre>
 </div>
 </div>
@@ -215,7 +215,84 @@ time to fit causal inference model:  16.049834489822388  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Features most predictive of the treatment effects (e.g., increase in probability of clicking product):</p>
+<p>We can also estimate <strong>individualized treatment effects</strong> (or <strong>ITE</strong>) for new observations using <code>CausalInfernceModel.predict</code>.  Make sure the supplied DataFrame contains the right columns.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cm</span><span class="o">.</span><span class="n">get_required_columns</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;T_ac&#39;, &#39;C_true&#39;, &#39;text&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;T_ac&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;C_true&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;text&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I never bought this album, but I love his music and will soon!&#39;</span><span class="p">]</span>
+      <span class="p">})</span>
+<span class="n">effect</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[0.80538201]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Features most predictive of the treatment effects (i.e., probability of clicking product):</p>
 
 </div>
 </div>

@@ -13,10 +13,10 @@ from causalml.propensity import ElasticNetPropensityModel
 from causalml.match import NearestNeighborMatch, create_table_one
 from scipy import stats
 from lightgbm import LGBMClassifier, LGBMRegressor
-from sklearn.linear_model import LogisticRegression, LinearRegression
 import numpy as np
 import warnings
 from copy import deepcopy
+from matplotlib import pyplot as plt
 from .preprocessing import DataframePreprocessor
 
 # from xgboost import XGBRegressor
@@ -196,15 +196,29 @@ class CausalInferenceModel:
         mean = np.mean(a)
         return {'ate' : mean}
 
-    def interpret(self, normalize=True, plot=False):
-        """Returns feature importances of treatment effect model"""
+
+    def interpret(self, plot=False, method='feature_importance'):
+        """
+        Returns feature importances of treatment effect model.
+        The method parameter must be one of {'feature_importance', 'shap_values'}
+        """
         tau = self.df[self.te]
         feature_names = self.x.columns.values
         if plot:
-            fn = self.model.plot_importance
+            if method=='feature_importance':
+                fn = self.model.plot_importance
+            elif method == 'shap_values':
+                fn = self.model.plot_shap_values
+            else:
+                raise ValueError('Unknown method: %s' % method)
         else:
-            fn = self.model.get_importance
-        return fn(X=self.x, tau=tau, normalize=True, method='auto', features = feature_names)
+            if method=='feature_importance':
+                fn = self.model.get_importance
+            elif method == 'shap_values':
+                fn = self.model.get_shap_values
+            else:
+                raise ValueError('Unknown method: %s' % method)
+        return fn(X=self.x, tau=tau, features = feature_names)
 
 
     def _minimize_bias(self, caliper = None):
@@ -250,3 +264,57 @@ class CausalInferenceModel:
                                 treatment_col='treatment',
                                 features=list(self.feature_names_one_hot)))
         return self.df_unbiased
+
+    def _predict_shap(self, x):
+        return self._predict(x)
+
+    def explain(self, df, row_index=None, row_num=0, background_size=50, nsamples=500):
+        """
+        Explain the treatment effect estimate of a single observation using SHAP.
+
+
+        **Parameters:**
+          - **df** (pd.DataFrame): a pd.DataFrame of test data is same format as original training data DataFrame
+          - **row_num** (int): raw row number in DataFrame to explain (default:0, the first row)
+          - **background_size** (int): size of background data (SHAP parameter)
+          - **nsamples** (int): number of samples (SHAP parameter)
+        """
+        try:
+            import shap
+        except ImportError:
+            msg = 'The explain method requires shap library. Please install with: pip install shap. '+\
+                    'Conda users should use this command instead: conda install -c conda-forge shap'
+            raise ImportError(msg)
+
+        f = self._predict_shap
+
+        # preprocess dataframe
+        _, df_display, _, _ = self.pp.preprocess(df.copy(), training=False)
+
+
+        # select row
+        df_display_row = df_display.iloc[[row_num]]
+        r_key = 'row_num'
+        r_val = row_num
+
+        # shap
+        explainer = shap.KernelExplainer(f, self.x.iloc[:background_size,:])
+        shap_values = explainer.shap_values(df_display_row, nsamples=nsamples, l1_reg='aic')
+        expected_value = explainer.expected_value
+
+        if not np.issubdtype(type(explainer.expected_value), np.floating):
+            expected_value = explainer.expected_value[0]
+        if type(shap_values) == list:
+            shap_values = shap_values[0]
+        plt.show(shap.force_plot(expected_value, shap_values, df_display_row, matplotlib=True))
+
+
+    def get_required_columns(self):
+        """
+        Returns required columns that must exist in any DataFrame supplied to `CausalInferenceModel.predict`.
+        """
+        treatment_col = self.pp.treatment_col
+        other_cols = self.pp.feature_names
+        result = [treatment_col] + other_cols
+        if self.pp.text_col: result.append(self.pp.text_col)
+        return result

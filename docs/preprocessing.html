@@ -72,7 +72,7 @@ nb_path: "nbs/03_preprocessing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="DataframePreprocessor.preprocess" class="doc_header"><code>DataframePreprocessor.preprocess</code><a href="__main__.py#L38" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataframePreprocessor.preprocess</code>(<strong><code>df</code></strong>, <strong><code>training</code></strong>=<em><code>False</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>na_cont_value</code></strong>=<em><code>-1</code></em>, <strong><code>na_cat_value</code></strong>=<em><code>'MISSING'</code></em>)</p>
+<h4 id="DataframePreprocessor.preprocess" class="doc_header"><code>DataframePreprocessor.preprocess</code><a href="__main__.py#L39" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>DataframePreprocessor.preprocess</code>(<strong><code>df</code></strong>, <strong><code>training</code></strong>=<em><code>False</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>na_cont_value</code></strong>=<em><code>-1</code></em>, <strong><code>na_cat_value</code></strong>=<em><code>'MISSING'</code></em>)</p>
 </blockquote>
 <p>Preprocess a dataframe for causal inference.</p>
 
@@ -146,7 +146,7 @@ nb_path: "nbs/03_preprocessing.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;product&#39;, &#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.1093640327453613  sec
+preprocess time:  1.49556303024292  sec
 </pre>
 </div>
 </div>
@@ -627,24 +627,6 @@ preprocess time:  1.1093640327453613  sec
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>outcome column (categorical): Y_sim
-treatment column: T_ac
-numerical/categorical covariates: [&#39;C_true&#39;, &#39;product&#39;]
-text covariate: text
-preprocess time:  0.013931751251220703  sec
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
