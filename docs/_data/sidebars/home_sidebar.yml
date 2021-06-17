@@ -19,7 +19,7 @@ entries:
       title: Analyzers
       url: analyzers.html
     - output: web,pdf
-      title: Preprocessor
+      title: Preprocessing
       url: preprocessing.html
     - output: web,pdf
       title: Examples
