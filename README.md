@@ -17,7 +17,7 @@ df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False
 ```
 
 The file `music_seed50.tsv` is a semi-simulated dataset from [here](https://github.com/rpryzant/causal-text). Columns of relevance include:
-- `Y_sim`: simulated outcome, where 1 means product was clicked and 0 means not.
+- `Y_sim`: outcome, where 1 means product was clicked and 0 means not.
 - `text`: raw text of review
 - `rating`: rating associated with review (1 through 5)
 - `T_true`: 1 means rating less than 3, 0 means rating of 5, where `T_true` affects the outcome `Y_sim`.
@@ -43,16 +43,18 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1216762065887451  sec
+    preprocess time:  1.129953145980835  sec
     start fitting causal inference model
-    time to fit causal inference model:  9.701336860656738  sec
+    time to fit causal inference model:  16.049834489822388  sec
 
 
-#### Results
+#### Estimating Treatment Effects
 
-We can calculate the average treatment effect to find that a positive review increases the probability of a click by 13 percentage points in this dataset.
+CausalNLP supports estimation of heterogeneous treatment effects (i.e., how causal impacts vary across observations, which could be documents, emails, posts, individuals, or organizations).
 
-The average treatment effect (ATE):
+We will first calculate the overall average treatment effect (or ATE), which shows that a positive review increases the probability of a click by **13 percentage points** in this dataset.
+
+The **average treatment effect** (or **ATE**):
 
 ```
 print( cm.estimate_ate() )
@@ -61,7 +63,7 @@ print( cm.estimate_ate() )
     {'ate': 0.1309311542209525}
 
 
-The conditional average treatment effect (CATE) for those reviews that mention the word "toddler":
+The **conditional average treatment effect** (or **CATE**) for those reviews that mention the word "toddler" is:
 
 ```
 print( cm.estimate_ate(df['text'].str.contains('toddler')) )

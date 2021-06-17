@@ -79,7 +79,7 @@ nb_path: "nbs/index.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The file <code>music_seed50.tsv</code> is a semi-simulated dataset from <a href="https://github.com/rpryzant/causal-text">here</a>. Columns of relevance include:</p>
 <ul>
-<li><code>Y_sim</code>: simulated outcome, where 1 means product was clicked and 0 means not.</li>
+<li><code>Y_sim</code>: outcome, where 1 means product was clicked and 0 means not.</li>
 <li><code>text</code>: raw text of review</li>
 <li><code>rating</code>: rating associated with review (1 through 5)</li>
 <li><code>T_true</code>: 1 means rating less than 3, 0 means rating of 5, where <code>T_true</code> affects the outcome <code>Y_sim</code>.</li>
@@ -122,9 +122,9 @@ nb_path: "nbs/index.ipynb"
 treatment column: T_ac
 numerical/categorical covariates: [&#39;C_true&#39;]
 text covariate: text
-preprocess time:  1.1216762065887451  sec
+preprocess time:  1.129953145980835  sec
 start fitting causal inference model
-time to fit causal inference model:  9.701336860656738  sec
+time to fit causal inference model:  16.049834489822388  sec
 </pre>
 </div>
 </div>
@@ -137,8 +137,9 @@ time to fit causal inference model:  9.701336860656738  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Results">Results<a class="anchor-link" href="#Results"> </a></h4><p>We can calculate the average treatment effect to find that a positive review increases the probability of a click by 13 percentage points in this dataset.</p>
-<p>The average treatment effect (ATE):</p>
+<h4 id="Estimating-Treatment-Effects">Estimating Treatment Effects<a class="anchor-link" href="#Estimating-Treatment-Effects"> </a></h4><p>CausalNLP supports estimation of heterogeneous treatment effects (i.e., how causal impacts vary across observations, which could be documents, emails, posts, individuals, or organizations).</p>
+<p>We will first calculate the overall average treatment effect (or ATE), which shows that a positive review increases the probability of a click by <strong>13 percentage points</strong> in this dataset.</p>
+<p>The <strong>average treatment effect</strong> (or <strong>ATE</strong>):</p>
 
 </div>
 </div>
@@ -176,7 +177,7 @@ time to fit causal inference model:  9.701336860656738  sec
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The conditional average treatment effect (CATE) for those reviews that mention the word "toddler":</p>
+<p>The <strong>conditional average treatment effect</strong> (or <strong>CATE</strong>) for those reviews that mention the word "toddler" is:</p>
 
 </div>
 </div>

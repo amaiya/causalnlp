@@ -143,12 +143,13 @@ class DataframePreprocessor:
             vocab_df = pd.DataFrame(v_features.toarray(), columns = ["v_%s" % (v) for v in vocab])
             X = pd.concat([X, vocab_df], axis=1, join='inner')
         outcome_type = 'categorical' if self.is_classification else 'numerical'
-        if self.outcome_col in df.columns and self.v:
-            print(f'outcome column ({outcome_type}): {self.outcome_col}')
-        if self.v: print(f'treatment column: {self.treatment_col}')
-        if self.v: print('numerical/categorical covariates: %s' % (self.feature_names))
-        if self.v and self.text_col: print('text covariate: %s' % (self.text_col))
-        if self.v: print("preprocess time: ", -start_time + time.time()," sec")
+        if training:
+            if self.outcome_col in df.columns and self.v:
+                print(f'outcome column ({outcome_type}): {self.outcome_col}')
+            if self.v: print(f'treatment column: {self.treatment_col}')
+            if self.v: print('numerical/categorical covariates: %s' % (self.feature_names))
+            if self.v and self.text_col: print('text covariate: %s' % (self.text_col))
+            if self.v: print("preprocess time: ", -start_time + time.time()," sec")
         return (df, X, Y, T)
 
 
