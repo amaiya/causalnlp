@@ -11,7 +11,7 @@
 
 ### Example: What is the causal impact of a positive review on a product click?
 
-```
+```python
 import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
@@ -29,7 +29,7 @@ We'll pretend the true sentiment (i.e., review rating and `T_true`) is hidden an
 
 Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable.
 
-```
+```python
 from causalnlp.causalinference import CausalInferenceModel
 from lightgbm import LGBMClassifier
 cm = CausalInferenceModel(df, 
@@ -43,9 +43,9 @@ cm.fit()
     treatment column: T_ac
     numerical/categorical covariates: ['C_true']
     text covariate: text
-    preprocess time:  1.1239838600158691  sec
+    preprocess time:  1.1179866790771484  sec
     start fitting causal inference model
-    time to fit causal inference model:  10.134298324584961  sec
+    time to fit causal inference model:  10.361494302749634  sec
 
 
 #### Estimating Treatment Effects
@@ -54,43 +54,29 @@ CausalNLP supports estimation of heterogeneous treatment effects (i.e., how caus
 
 We will first calculate the overall average treatment effect (or ATE), which shows that a positive review increases the probability of a click by **13 percentage points** in this dataset.
 
-The **average treatment effect** (or **ATE**):
+**Average Treatment Effect** (or **ATE**):
 
-```
+```python
 print( cm.estimate_ate() )
 ```
 
     {'ate': 0.1309311542209525}
 
 
-The **conditional average treatment effect** (or **CATE**) for those reviews that mention the word "toddler" is:
+**Conditional Average Treatment Effect** (or **CATE**): reviews that mention the word "toddler":
 
-```
+```python
 print( cm.estimate_ate(df['text'].str.contains('toddler')) )
 ```
 
     {'ate': 0.15559234254638685}
 
 
- We can also estimate **individualized treatment effects** (or **ITE**) for new observations using `CausalInfernceModel.predict`.  Make sure the supplied DataFrame contains the right columns.
+ **Individualized Treatment Effects** (or **ITE**):
 
-```
-cm.get_required_columns()
-```
-
-
-
-
-    ['T_ac', 'C_true', 'text']
-
-
-
-```
-test_df = pd.DataFrame({
-    'T_ac' : [1],
-    'C_true' : [1],
-    'text' : ['I never bought this album, but I love his music and will soon!']
-      })
+```python
+test_df = pd.DataFrame({'T_ac' : [1], 'C_true' : [1], 
+                        'text' : ['I never bought this album, but I love his music and will soon!']})
 effect = cm.predict(test_df)
 print(effect)
 ```
@@ -98,9 +84,9 @@ print(effect)
     [[0.80538201]]
 
 
-Features most predictive of the treatment effects (i.e., probability of clicking product):
+**Model Interpretability**:
 
-```
+```python
 print( cm.interpret(plot=False)[1][:10] )
 ```
 
