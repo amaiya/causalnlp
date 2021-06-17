@@ -6,6 +6,18 @@ Most recent releases are shown at the top. Each release shows:
 - **Changed**: Additional parameters, changes to inputs or outputs, etc
 - **Fixed**: Bug fixes that don't change documented behaviour
 
+## 0.1.2 (2021-06-17)
+
+### New:
+- N/A
+
+### Changed
+- Better interpretability and explainability of treatment effects
+
+### Fixed:
+- Fixes to some bugs in preprocessing
+
+
 ## 0.1.1 (2021-06-16)
 
 ### New:
@@ -16,6 +28,8 @@ Most recent releases are shown at the top. Each release shows:
 
 ### Fixed:
 - N/A
+
+
 
 ## 0.1.0 (2021-06-15)
 
