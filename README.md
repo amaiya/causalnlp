@@ -11,7 +11,7 @@
 
 ### Example: What is the causal impact of a positive review on a product click?
 
-```python
+```
 import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
@@ -29,7 +29,7 @@ We'll pretend the true sentiment (i.e., review rating and `T_true`) is hidden an
 
 Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable.
 
-```python
+```
 from causalnlp.causalinference import CausalInferenceModel
 from lightgbm import LGBMClassifier
 cm = CausalInferenceModel(df, 
@@ -54,7 +54,7 @@ We can calculate the average treatment effect to find that a positive review inc
 
 The average treatment effect (ATE):
 
-```python
+```
 print( cm.estimate_ate() )
 ```
 
@@ -63,7 +63,7 @@ print( cm.estimate_ate() )
 
 The conditional average treatment effect (CATE) for those reviews that mention the word "toddler":
 
-```python
+```
 print( cm.estimate_ate(df['text'].str.contains('toddler')) )
 ```
 
@@ -72,7 +72,7 @@ print( cm.estimate_ate(df['text'].str.contains('toddler')) )
 
 Features most predictive of the treatment effects (e.g., increase in probability of clicking product):
 
-```python
+```
 print( cm.interpret(plot=False)[1][:10] )
 ```
 

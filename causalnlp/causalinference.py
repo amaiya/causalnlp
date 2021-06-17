@@ -17,6 +17,7 @@ from sklearn.linear_model import LogisticRegression, LinearRegression
 import numpy as np
 import warnings
 from copy import deepcopy
+from .preprocessing import DataframePreprocessor
 
 # from xgboost import XGBRegressor
 # from causalml.inference.meta import XGBTRegressor, MLPTRegressor
@@ -89,47 +90,30 @@ class CausalInferenceModel:
         metalearner_list = list(metalearner_cls_dict.keys())
         if metalearner_type not in metalearner_list:
             raise ValueError('metalearner_type is required and must be one of: %s' % (metalearner_list))
-        self.treatment_col = treatment_col
-        self.outcome_col = outcome_col
-        self.text_col = text_col
         self.te = treatment_effect_col # created
         self.metalearner_type = metalearner_type
         self.v = verbose
         self.df = df.copy()
-        self.min_df = 0.05
-        self.max_df = 0.5
-        self.ngram_range = ngram_range
-        self.stop_words = stop_words
-        if not isinstance(ignore_cols, list):
-            raise ValueError('ignore_cols must be a list.')
-        if not isinstance(include_cols, list):
-            raise ValueError('include_cols must be a list.')
-        if ignore_cols and include_cols:
-            raise  ValueError('ignore_cols and include_cols are mutually exclusive.  Please choose one.')
-        if include_cols:
-            ignore_cols = [c for c in df.columns.values if c not in include_cols + [treatment_col,
-                                                                                    outcome_col,
-                                                                                    text_col]]
-        self.ignore_cols = ignore_cols
-        self.include_cols = include_cols
-
-        if text_col is not None and text_col not in df:
-            raise ValueError(f'You specified text_col="{text_col}", but {text_col} is not a column in df.')
-        if self.treatment_col in self.ignore_cols:
-            raise ValueError(f'ignore_cols contains the treatment column ({treatment_col})')
-        if self.outcome_col in self.ignore_cols:
-            raise ValueError(f'ignore_cols contains the outcome column ({outcome_col})')
 
 
         # these are auto-populated by preprocess method
-        self.is_classification = True
-        self.feature_names = None
         self.x = None
         self.y = None
         self.treatment = None
 
         # preprocess
-        self.preprocess(self.df)
+        self.pp = DataframePreprocessor(treatment_col = treatment_col,
+                                       outcome_col = outcome_col,
+                                       text_col=text_col,
+                                       include_cols=include_cols,
+                                       ignore_cols=ignore_cols,
+                                       verbose=self.v)
+        self.df, self.x, self.y, self.treatment = self.pp.preprocess(self.df,
+                                                                     training=True,
+                                                                     min_df=min_df,
+                                                                     max_df=max_df,
+                                                                     ngram_range=ngram_range,
+                                                                     stop_words=stop_words)
 
         # setup model
         self.model = self._create_metalearner(metalearner_type=self.metalearner_type,
@@ -142,7 +126,7 @@ class CausalInferenceModel:
                             supplied_learner=None, supplied_effect_learner=None):
         # set learner
         default_learner = None
-        if self.is_classification:
+        if self.pp.is_classification:
             default_learner = LGBMClassifier()
         else:
             default_learner =  LGBMRegressor()
@@ -152,7 +136,7 @@ class CausalInferenceModel:
                          supplied_effect_learner
 
         # set metalearner
-        metalearner_class = metalearner_cls_dict[metalearner_type] if self.is_classification \
+        metalearner_class = metalearner_cls_dict[metalearner_type] if self.pp.is_classification \
                                                                    else metalearner_reg_dict[metalearner_type]
         if metalearner_type in ['t-learner', 's-learner']:
             model = metalearner_class(learner=learner,control_name=0)
@@ -170,131 +154,6 @@ class CausalInferenceModel:
         return model
 
 
-    def preprocess(self, df=None, na_cont_value=-1, na_cat_value='MISSING'):
-        """
-        Preprocess a dataframe for causal inference.
-        If df is None, uses self.df.
-        """
-        start_time = time.time()
-
-        # step 1: check/clean dataframe
-        if not isinstance(df, pd.DataFrame):
-            raise ValueError('df must be a pandas DataFrame')
-        df = df.rename(columns=lambda x: x.strip()) # strip headers
-        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)  # strip data
-        df, _ = self._preprocess_column(df, self.treatment_col, is_treatment=True)
-        df, self.is_classification = self._preprocess_column(df, self.outcome_col, is_treatment=False)
-        self.feature_names = [c for c in df.columns.values \
-                             if c not in [self.treatment_col,
-                                          self.outcome_col, self.text_col]+self.ignore_cols]
-        self.x = df[self.feature_names].copy()
-        self.y = df[self.outcome_col].copy()
-        self.treatment = df[self.treatment_col].copy()
-
-
-        # step 2: fill empty values on x
-        for c in self.feature_names:
-            if self._check_type(df, c)['dtype'] =='string': self.x[c] = self.x[c].fillna(na_cat_value)
-            if self._check_type(df, c)['dtype']=='numeric': self.x[c] = self.x[c].fillna(na_cont_value)
-
-
-        # step 3: one-hot encode categorial features
-        for c in self.feature_names:
-            if c == self.text_col: continue
-            if self._check_type(df, c)['dtype']=='string':
-                if self.df[c].nunique()/self.df.shape[0] > 0.5:
-                    if self.text_col is not None:
-                        err_msg = f'Column "{c}" looks like it contains free-form text. ' +\
-                        f'Since there is already a text_col specified ({self.text_col}), '+\
-                        f'you should probably include this column in the "ignore_cols" list.'
-                    else:
-                        err_msg = f'Column "{c}" looks like it contains free-form text or ' +\
-                        f'or unique values. Please either set text_col="{c}" or add it to "ignore_cols" list.'
-                    raise ValueError(err_msg)
-
-                self.x = self.x.merge(pd.get_dummies(self.x[c], prefix = c,
-                                                     drop_first=False),
-                                                     left_index=True, right_index=True)
-                del self.x[c]
-        self.feature_names_one_hot = self.x.columns
-
-
-        # step 4: for text-based confounder, use extracted vocabulary as features
-        if self.text_col is not None:
-            from sklearn.feature_extraction.text import TfidfVectorizer
-            tv = TfidfVectorizer(min_df=self.min_df, max_df=self.max_df,
-                                 ngram_range=self.ngram_range, stop_words=self.stop_words)
-            v_features = tv.fit_transform(self.df[self.text_col])
-            vocab = tv.get_feature_names()
-            vocab_df = pd.DataFrame(v_features.toarray(), columns = ["v_%s" % (v) for v in vocab])
-            self.x = pd.concat([self.x, vocab_df], axis=1, join='inner')
-        outcome_type = 'categorical' if self.is_classification else 'numerical'
-        if self.v: print(f'outcome column ({outcome_type}): {self.outcome_col}')
-        if self.v: print(f'treatment column: {self.treatment_col}')
-        if self.v: print('numerical/categorical covariates: %s' % (self.feature_names))
-        if self.v and self.text_col: print('text covariate: %s' % (self.text_col))
-        if self.v: print("preprocess time: ", -start_time + time.time()," sec")
-
-        return df
-
-
-    def _preprocess_column(self, df, col, is_treatment=True):
-        """
-        Preprocess treatment and outcome columns.
-        """
-        # remove nulls
-        df = df[df[col].notnull()]
-
-        # check if already binarized
-        if self._check_binary(df, col): return df, True
-
-        # inspect column
-        d = self._check_type(df, col)
-        typ = d['dtype']
-        num = d['nunique']
-
-        # process as treatment
-        if is_treatment:
-            if typ == 'numeric' or (typ == 'string' and num != 2):
-                raise ValueError('Treatment column must contain only two unique values ' +\
-                                 'indicating the treated and control groups.')
-            values = sorted(df[col].unique())
-            df[col].replace(values, [0,1], inplace=True)
-            if self.v: print('replaced %s in column "%s" with %s' % (values, col, [0,1]))
-        # process as outcome
-        else:
-            if typ == 'string' and num != 2:
-                raise ValueError('If the outcome column is string/categorical, it must '+
-                                'contain only two unique values.')
-            if typ == 'string':
-                values = sorted(df[col].unique())
-                df[col].replace(values, [0,1], inplace=True)
-                if self.v: print('replaced %s in column "%s" with %s' % (values, col, [0,1]))
-        return df, self._check_binary(df, col)
-
-
-    def _check_type(self, df, col):
-        from pandas.api.types import is_string_dtype
-        from pandas.api.types import is_numeric_dtype
-        dtype = None
-
-        tmp_var = df[df[col].notnull()][col]
-        if is_numeric_dtype(tmp_var): dtype = 'numeric'
-        elif is_string_dtype(tmp_var): dtype =  'string'
-        else:
-            raise ValueError('Columns in dataframe must be either numeric or strings.  ' +\
-                             'Column %s is neither' % (col))
-        output = {'dtype' : dtype, 'nunique' : tmp_var.nunique()}
-        return output
-
-
-    def _check_binary(self, df, col):
-        return df[col].isin([0,1]).all()
-
-    def _get_feature_names(self, df):
-        return [c for c in df.columns.values \
-                if c not in [self.treatment_col, self.outcome_col]+self.ignore_cols]
-
     def fit(self):
         """
         Fits a causal inference model and estimates outcome
@@ -303,13 +162,24 @@ class CausalInferenceModel:
         print("start fitting causal inference model")
         start_time = time.time()
         self.model.fit(self.x.values, self.treatment.values, self.y.values)
-        preds = self.predict(self.x)
+        preds = self._predict(self.x)
         self.df[self.te] = preds
         print("time to fit causal inference model: ",-start_time + time.time()," sec")
 
-    def predict(self, x):
+    def predict(self, df):
         """
-        Estimates the treatment effect for each observation in `x`.
+        Estimates the treatment effect for each observation in `df`.
+        The DataFrame represented by `df` should be the same format
+        as the one supplied to `CausalInferenceModel.__init__`.
+        """
+        _, x, _, _ = self.pp.preprocess(df, training=False)
+        return self._predict(x)
+
+
+    def _predict(self, x):
+        """
+        Estimates the treatment effect for each observation in `x`,
+        where `x` is an **un-preprocessed** DataFrame of Numpy array.
         """
         if isinstance(x, pd.DataFrame):
             return self.model.predict(x.values)
@@ -337,42 +207,46 @@ class CausalInferenceModel:
         return fn(X=self.x, tau=tau, normalize=True, method='auto', features = feature_names)
 
 
-    def minimize_bias(self, caliper = None):
-            print('-------Start bias minimization procedure----------')
-            start_time = time.time()
-            #Join x, y and treatment vectors
-            df_match = self.x.merge(self.treatment,left_index=True, right_index=True)
-            df_match = df_match.merge(self.y, left_index=True, right_index=True)
+    def _minimize_bias(self, caliper = None):
+        """
+        minimize bias (experimental/untested)
+        """
 
-            #buld propensity model. Propensity is the probability of raw belongs to control group.
-            pm = ElasticNetPropensityModel(n_fold=3, random_state=42)
+        print('-------Start bias minimization procedure----------')
+        start_time = time.time()
+        #Join x, y and treatment vectors
+        df_match = self.x.merge(self.treatment,left_index=True, right_index=True)
+        df_match = df_match.merge(self.y, left_index=True, right_index=True)
 
-            #ps - propensity score
-            df_match['ps'] = pm.fit_predict(self.x, self.treatment)
+        #buld propensity model. Propensity is the probability of raw belongs to control group.
+        pm = ElasticNetPropensityModel(n_fold=3, random_state=42)
 
-            #Matching model object
-            psm = NearestNeighborMatch(replace=False,
-                           ratio=1,
-                           random_state=423,
-                           caliper=caliper)
+        #ps - propensity score
+        df_match['ps'] = pm.fit_predict(self.x, self.treatment)
 
-            ps_cols = list(self.feature_names_one_hot)
-            ps_cols.append('ps')
+        #Matching model object
+        psm = NearestNeighborMatch(replace=False,
+                       ratio=1,
+                       random_state=423,
+                       caliper=caliper)
 
-            #Apply matching model
-            #If error, then sample is unbiased and we don't do anything
-            self.flg_bias = True
-            self.df_unbiased = psm.match(data=df_match, treatment_col='treatment',score_cols=['ps'])
-            self.x_unbiased = self.df_unbiased[self.x.columns]
-            self.y_unbiased = self.df_unbiased[self.outcome_col]
-            self.treatment_unbiased = self.df_unbiased['treatment']
-            print('-------------------MATCHING RESULTS----------------')
-            print('-----BEFORE MATCHING-------')
-            print(create_table_one(data=df_match,
-                                    treatment_col='treatment',
-                                    features=list(self.feature_names_one_hot)))
-            print('-----AFTER MATCHING-------')
-            print(create_table_one(data=self.df_unbiased,
-                                    treatment_col='treatment',
-                                    features=list(self.feature_names_one_hot)))
-            return self.df_unbiased
+        ps_cols = list(self.feature_names_one_hot)
+        ps_cols.append('ps')
+
+        #Apply matching model
+        #If error, then sample is unbiased and we don't do anything
+        self.flg_bias = True
+        self.df_unbiased = psm.match(data=df_match, treatment_col='treatment',score_cols=['ps'])
+        self.x_unbiased = self.df_unbiased[self.x.columns]
+        self.y_unbiased = self.df_unbiased[self.outcome_col]
+        self.treatment_unbiased = self.df_unbiased['treatment']
+        print('-------------------MATCHING RESULTS----------------')
+        print('-----BEFORE MATCHING-------')
+        print(create_table_one(data=df_match,
+                                treatment_col='treatment',
+                                features=list(self.feature_names_one_hot)))
+        print('-----AFTER MATCHING-------')
+        print(create_table_one(data=self.df_unbiased,
+                                treatment_col='treatment',
+                                features=list(self.feature_names_one_hot)))
+        return self.df_unbiased

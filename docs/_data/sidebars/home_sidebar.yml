@@ -19,6 +19,9 @@ entries:
       title: Analyzers
       url: analyzers.html
     - output: web,pdf
+      title: Preprocessor
+      url: preprocessing.html
+    - output: web,pdf
       title: Examples
       url: examples.html
     output: web

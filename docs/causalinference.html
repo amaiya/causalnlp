@@ -40,7 +40,7 @@ nb_path: "nbs/00_causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L35" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>metalearner_type</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L36" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>metalearner_type</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Infers causality from the data contained in <code>df</code> using a metalearner.</p>
 <p>Usage:</p>
@@ -101,7 +101,7 @@ nb_path: "nbs/00_causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.fit" class="doc_header"><code>CausalInferenceModel.fit</code><a href="__main__.py#L294" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.fit</code>()</p>
+<h4 id="CausalInferenceModel.fit" class="doc_header"><code>CausalInferenceModel.fit</code><a href="__main__.py#L153" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.fit</code>()</p>
 </blockquote>
 <p>Fits a causal inference model and estimates outcome
 with and without treatment for each observation.</p>
@@ -127,9 +127,11 @@ with and without treatment for each observation.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.predict" class="doc_header"><code>CausalInferenceModel.predict</code><a href="__main__.py#L306" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.predict</code>(<strong><code>x</code></strong>)</p>
+<h4 id="CausalInferenceModel.predict" class="doc_header"><code>CausalInferenceModel.predict</code><a href="__main__.py#L165" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.predict</code>(<strong><code>df</code></strong>)</p>
 </blockquote>
-<p>Estimates the treatment effect for each observation in <code>x</code>.</p>
+<p>Estimates the treatment effect for each observation in <code>df</code>.
+The DataFrame represented by <code>df</code> should be the same format
+as the one supplied to <a href="/causalnlp/causalinference.html#CausalInferenceModel.__init__"><code>CausalInferenceModel.__init__</code></a>.</p>
 
 </div>
 
@@ -141,13 +143,6 @@ with and without treatment for each observation.</p>
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The parameter <code>x</code> should be either a <code>pandas.DataFrame</code> or a <code>numpy.ndarray</code>.</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -159,7 +154,7 @@ with and without treatment for each observation.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.estimate_ate" class="doc_header"><code>CausalInferenceModel.estimate_ate</code><a href="__main__.py#L315" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.estimate_ate</code>(<strong><code>bool_mask</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CausalInferenceModel.estimate_ate" class="doc_header"><code>CausalInferenceModel.estimate_ate</code><a href="__main__.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.estimate_ate</code>(<strong><code>bool_mask</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Estimates the treatment effect for each observation in
 <code>self.df</code>.</p>
@@ -195,7 +190,7 @@ For instance, to estimate the average treatment effect for only those individual
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.interpret" class="doc_header"><code>CausalInferenceModel.interpret</code><a href="__main__.py#L325" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.interpret</code>(<strong><code>normalize</code></strong>=<em><code>True</code></em>, <strong><code>plot</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="CausalInferenceModel.interpret" class="doc_header"><code>CausalInferenceModel.interpret</code><a href="__main__.py#L195" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.interpret</code>(<strong><code>normalize</code></strong>=<em><code>True</code></em>, <strong><code>plot</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Returns feature importances of treatment effect model</p>
 
@@ -600,9 +595,9 @@ For instance, to estimate the average treatment effect for only those individual
 <pre>outcome column (categorical): Post_Shared?
 treatment column: Is_Male?
 numerical/categorical covariates: [&#39;negative&#39;]
-preprocess time:  0.012577295303344727  sec
+preprocess time:  0.012705326080322266  sec
 start fitting causal inference model
-time to fit causal inference model:  0.5944626331329346  sec
+time to fit causal inference model:  0.6229062080383301  sec
 </pre>
 </div>
 </div>
@@ -805,6 +800,55 @@ For instance, for negative posts, being male increases the chance of your post b
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Predictions can be made for new observations.    We just have to make sure it contains the relevant columns included in the DataFrame supplied to <a href="/causalnlp/causalinference.html#CausalInferenceModel.fit"><code>CausalInferenceModel.fit</code></a>. In this case, it must include <code>Is_Male?</code> and <code>negative</code>.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+     <span class="s1">&#39;text&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I love my life.&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;Is_Male?&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s1">&#39;negative&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="p">})</span>
+<span class="n">effect</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">effect</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.065</span>
+<span class="k">assert</span> <span class="n">effect</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.064</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>treatment column: Is_Male?
+numerical/categorical covariates: [&#39;negative&#39;]
+preprocess time:  0.005812644958496094  sec
+[[0.06436468]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Causal-Inference-Using-Raw-Text-as-a-Confounder/Mediator">Causal Inference Using Raw Text as a Confounder/Mediator<a class="anchor-link" href="#Causal-Inference-Using-Raw-Text-as-a-Confounder/Mediator"> </a></h3><p>In the example above, we approached the problem under the assumption that a specific lingustic property (sentiment) was an important mediator or confounder for which to control. In some cases, there may also be other unknown lingustic properties that are potential confounders/mediators (e.g., topic, politeness, toxic language, readability).</p>
 <p>In <strong>CausalNLP</strong>, we can also use the <strong>raw text</strong> as the potential confounder/mediator.</p>
 
@@ -838,9 +882,9 @@ For instance, for negative posts, being male increases the chance of your post b
 treatment column: Is_Male?
 numerical/categorical covariates: []
 text covariate: Post_Text
-preprocess time:  0.01460719108581543  sec
+preprocess time:  0.014935731887817383  sec
 start fitting causal inference model
-time to fit causal inference model:  0.07987689971923828  sec
+time to fit causal inference model:  0.4035990238189697  sec
 </pre>
 </div>
 </div>
@@ -971,6 +1015,58 @@ time to fit causal inference model:  0.07987689971923828  sec
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>Make predictions on new data.  Again, make sure the DataFrame contains the relevant columns included in the original DataFrame supplied to [`CausalInferenceModel.fit`](/causalnlp/causalinference.html#CausalInferenceModel.fit):</code></pre>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+     <span class="s1">&#39;Post_Text&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;I love my life.&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;New Column&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;Is_Male?&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="s1">&#39;negative&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="p">})</span>
+<span class="n">effect</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">effect</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.065</span>
+<span class="k">assert</span> <span class="n">effect</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.064</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>treatment column: Is_Male?
+numerical/categorical covariates: []
+text covariate: Post_Text
+preprocess time:  0.006860971450805664  sec
+[[0.06436468]]
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -1133,9 +1229,9 @@ time to fit causal inference model:  0.07987689971923828  sec
 <pre>outcome column (categorical): Post_Shared?
 treatment column: positive
 numerical/categorical covariates: [&#39;Is_Male?&#39;]
-preprocess time:  0.008679389953613281  sec
+preprocess time:  0.009846687316894531  sec
 start fitting causal inference model
-time to fit causal inference model:  0.36716127395629883  sec
+time to fit causal inference model:  0.9969875812530518  sec
 </pre>
 </div>
 </div>
@@ -1192,6 +1288,45 @@ time to fit causal inference model:  0.36716127395629883  sec
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Is_Male?&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;positive&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="p">})</span>
+<span class="n">effect</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>treatment column: positive
+numerical/categorical covariates: [&#39;Is_Male?&#39;]
+preprocess time:  0.005437612533569336  sec
+[[0.20099539]]
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
