@@ -105,6 +105,10 @@ print( cm.interpret(plot=False)[1][:10] )
 
 Features with the `v_` prefix are word features. `C_true` is the categorical variable indicating whether or not the product is a CD. 
 
+### Text is Optional in CausalNLP
+
+Despite the "NLP" in CausalNLP, the library can be used for causal inference on data **without** text (e.g., only numerical and categorical variables). See [the examples](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-foreclosure-or-short-sale-on-the-sale-price-of-homes-greater-than-2000-square-feet?) for more info.
+
 ## Documentation
 API documentation and additional usage examples are available at: https://amaiya.github.io/causalnlp/
 
