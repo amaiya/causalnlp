@@ -127,6 +127,35 @@ with and without treatment for each observation.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
+<h4 id="CausalInferenceModel.tune_and_use_default_learner" class="doc_header"><code>CausalInferenceModel.tune_and_use_default_learner</code><a href="__main__.py#L319" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.tune_and_use_default_learner</code>(<strong><code>split_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>random_state</code></strong>=<em><code>314</code></em>, <strong><code>scoring</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Tunes the hyperparameters of a default LightGBM model, replaces <a href="/causalnlp/causalinference.html#CausalInferenceModel.learner"><code>CausalInferenceModel.learner</code></a>,
+and returns best parameters.
+Should be invoked <strong>prior</strong> to running <code>CausalInferencemodel.fit</code>.
+If <code>scoring</code> is None, then 'roc_auc' is used for classification and 'negative_mean_squared_error'
+is used for regresssion.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
 <h4 id="CausalInferenceModel.predict" class="doc_header"><code>CausalInferenceModel.predict</code><a href="__main__.py#L165" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.predict</code>(<strong><code>df</code></strong>)</p>
 </blockquote>
 <p>Estimates the treatment effect for each observation in <code>df</code>.

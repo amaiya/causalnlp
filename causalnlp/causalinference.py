@@ -318,3 +318,59 @@ class CausalInferenceModel:
         result = [treatment_col] + other_cols
         if self.pp.text_col: result.append(self.pp.text_col)
         return result
+
+
+    def tune_and_use_default_learner(self, split_pct=0.2, random_state=314, scoring=None):
+        """
+        Tunes the hyperparameters of a default LightGBM model, replaces `CausalInferenceModel.learner`,
+        and returns best parameters.
+        Should be invoked **prior** to running `CausalInferencemodel.fit`.
+        If `scoring` is None, then 'roc_auc' is used for classification and 'negative_mean_squared_error'
+        is used for regresssion.
+        """
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(self.x.values, self.y.values,
+                                                            test_size=split_pct,
+                                                            random_state=random_state)
+
+        fit_params={"early_stopping_rounds":30,
+                    "eval_metric" : 'auc',
+                    "eval_set" : [(X_test,y_test)],
+                    'eval_names': ['valid'],
+                    'verbose': 100,
+                    'categorical_feature': 'auto'}
+
+
+        from scipy.stats import randint as sp_randint
+        from scipy.stats import uniform as sp_uniform
+        param_test ={'num_leaves': sp_randint(6, 750),
+                     'min_child_samples': sp_randint(20, 500),
+                     'min_child_weight': [1e-5, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4],
+                     'subsample': sp_uniform(loc=0.2, scale=0.8),
+                     'colsample_bytree': sp_uniform(loc=0.4, scale=0.6),
+                     'reg_alpha': [0, 1e-1, 1, 2, 5, 7, 10, 50, 100],
+                     'reg_lambda': [0, 1e-1, 1, 5, 10, 20, 50, 100]}
+        n_HP_points_to_test = 100
+        if self.pp.is_classification:
+            learner_type = LGBMClassifier
+            scoring = 'roc_auc' if scoring is None else scoring
+        else:
+            learner_type =  LGBMRegressor
+            scoring = 'neg_mean_squared_error' if scoring is None else scoring
+        clf = learner_type(max_depth=-1, random_state=random_state, silent=True,
+                         metric='None', n_jobs=4, n_estimators=5000)
+        from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+        gs = RandomizedSearchCV(
+                estimator=clf, param_distributions=param_test,
+                n_iter=n_HP_points_to_test,
+                scoring='roc_auc',
+                cv=3,
+                refit=True,
+                random_state=random_state,
+                verbose=True)
+
+        gs.fit(X_train, y_train, **fit_params)
+        print('Best score reached: {} with params: {} '.format(gs.best_score_, gs.best_params_))
+        best_params = gs.best_params_
+        self.learner = learner_type(**best_params)
+        return best_params
