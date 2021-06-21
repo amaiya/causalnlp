@@ -7,7 +7,7 @@
 - Out-of-the-box support for using [**text** as a "controlled-for" variable](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-positive-review-on-product-views?) (e.g., confounder)
 - Built-in [Autocoder](https://amaiya.github.io/causalnlp/autocoder.html) that transforms raw text into useful variables for causal analyses (e.g., topics, sentiment, emotion, etc.)
 - Quick and simple [key driver analysis](https://amaiya.github.io/causalnlp/key_driver_analysis.html)
-- Can easily be applied to ["traditional" tabular datasets without text](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-foreclosure-or-short-sale-on-the-sale-price-of-homes-greater-than-2000-square-feet?) (i.e., datasets with only numerical and categorical variables)
+- Can easily be applied to ["traditional" tabular datasets without text](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-having-a-PhD-on-making-over-$50K?) (i.e., datasets with only numerical and categorical variables)
 
 ## Install
 
@@ -116,7 +116,7 @@ Features with the `v_` prefix are word features. `C_true` is the categorical var
 
 ### Text is Optional in CausalNLP
 
-Despite the "NLP" in CausalNLP, the library can be used for causal inference on data **without** text (e.g., only numerical and categorical variables). See [the examples](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-foreclosure-or-short-sale-on-the-sale-price-of-homes-greater-than-2000-square-feet?) for more info.
+Despite the "NLP" in CausalNLP, the library can be used for causal inference on data **without** text (e.g., only numerical and categorical variables). See [the examples](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-having-a-PhD-on-making-over-$50K?) for more info.
 
 ## Documentation
 API documentation and additional usage examples are available at: https://amaiya.github.io/causalnlp/
