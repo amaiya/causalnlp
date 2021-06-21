@@ -165,6 +165,7 @@ class CausalInferenceModel:
         preds = self._predict(self.x)
         self.df[self.te] = preds
         print("time to fit causal inference model: ",-start_time + time.time()," sec")
+        return self
 
     def predict(self, df):
         """
