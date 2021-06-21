@@ -1,4 +1,4 @@
-# CausalNLP
+# Welcome to CausalNLP
 > CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
 
 
@@ -21,6 +21,7 @@
 ### Example: What is the causal impact of a positive review on a product click?
 
 ```
+#all_notest
 import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
