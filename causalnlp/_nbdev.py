@@ -11,11 +11,13 @@ index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "TextEncoder": "02_analyzers.ipynb",
          "TopicModel": "02_analyzers.ipynb",
          "DEFAULT_TOKEN_PATTERN": "02_analyzers.ipynb",
-         "DataframePreprocessor": "03_preprocessing.ipynb"}
+         "KeyDriverAnalysis": "03_key_driver_analysis.ipynb",
+         "DataframePreprocessor": "04_preprocessing.ipynb"}
 
 modules = ["causalinference.py",
            "autocoder.py",
            "analyzers.py",
+           "key_driver_analysis.py",
            "preprocessing.py"]
 
 doc_url = "https://amaiya.github.io/causalnlp/"

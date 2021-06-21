@@ -19,6 +19,9 @@ entries:
       title: Analyzers
       url: analyzers.html
     - output: web,pdf
+      title: Key Driver Analysis
+      url: key_driver_analysis.html
+    - output: web,pdf
       title: Preprocessing
       url: preprocessing.html
     - output: web,pdf
