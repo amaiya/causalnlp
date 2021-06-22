@@ -1,6 +1,7 @@
 repository: amaiya/causalnlp
 output: web
 topnav_title: causalnlp
+default_badges: {colab: true}
 site_title: causalnlp
 company_name: Arun S. Maiya
 description: CausalNLP
