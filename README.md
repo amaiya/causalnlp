@@ -1,14 +1,10 @@
-# Welcome to CausalNLP
-> CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
-
-
 # CausalNLP
-## Features
-- Low-code [causal inference](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-positive-review-on-product-views?) in as little as two commands
-- Out-of-the-box support for using [**text** as a "controlled-for" variable](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-positive-review-on-product-views?) (e.g., confounder)
-- Built-in [Autocoder](https://amaiya.github.io/causalnlp/autocoder.html) that transforms raw text into useful variables for causal analyses (e.g., topics, sentiment, emotion, etc.)
-- Quick and simple [key driver analysis](https://amaiya.github.io/causalnlp/key_driver_analysis.html) to yield clues on potential drivers of an outcome based on predictive power, correlations, etc.
-- Can easily be applied to ["traditional" tabular datasets without text](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-having-a-PhD-on-making-over-$50K?) (i.e., datasets with only numerical and categorical variables)
+
+
+
+## Welcome to CausalNLP
+
+> CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
 
 ## Install
 
