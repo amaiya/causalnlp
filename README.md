@@ -21,14 +21,13 @@
 
 ## Usage
 
-To try these examples out for yourself:
+To try out the examples yourself:
 
 <a href="https://colab.research.google.com/drive/1hu7j2QCWkVlFsKbuereWWRDOBy1anMbQ?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ### Example: What is the causal impact of a positive review on a product click?
 
 ```python
-#all_notest
 import pandas as pd
 df = pd.read_csv('sample_data/music_seed50.tsv', sep='\t', error_bad_lines=False)
 ```
