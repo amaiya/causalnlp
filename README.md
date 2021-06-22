@@ -1,5 +1,5 @@
 # Welcome to CausalNLP
-> CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
+
 
 
 ## Features
