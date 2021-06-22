@@ -21,7 +21,8 @@
 
 ## Usage
 
-To try these examples out for yourself: 
+To try these examples out for yourself:
+
 <a href="https://colab.research.google.com/drive/1hu7j2QCWkVlFsKbuereWWRDOBy1anMbQ?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ### Example: What is the causal impact of a positive review on a product click?
