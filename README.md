@@ -1,8 +1,9 @@
 # CausalNLP
-> CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
+
 
 
 # Welcome to CausalNLP
+> CausalNLP is a practical toolkit for causal inference with text as treatment, outcome, or "controlled-for" variable.
 
 ## Features
 - Low-code [causal inference](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-a-positive-review-on-product-views?) in as little as two commands
