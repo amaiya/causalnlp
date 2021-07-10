@@ -7,13 +7,14 @@
     "Key Driver Analysis": "key_driver_analysis.html",
     "Preprocessing": "preprocessing.html",
     "Base Metalearner": "meta.base.html",
-    "Metalearner Explainer": "meta.explainer.html",
-    "Metalearner Utils": "meta.utils.html",
-    "Metalearner Propensity": "meta.propensity.html",
-    "T-Learner": "meta.tlearner.html",
+    "T-Learner": "meta.tleaerner.html",
     "S-Learner": "meta.slearner.html",
     "X-Learner": "meta.xlearner.html",
     "R-Learner": "meta.rlearner.html",
+    "Metalearner Utils": "meta.utils.html",
+    "Metalearner Explainer": "meta.explainer.html",
+    "Metalearner Propensity": "meta.propensity.html",
+    "Metalearner Sensitivity": "meta.sensitivity.html",
     "Examples": "examples.html"
   }
 }
