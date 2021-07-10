@@ -137,7 +137,7 @@ class TextEncoder():
         try:
             from sentence_transformers import SentenceTransformer, util
         except ImportError:
-            raise Exception('Embeddings requires: pip install sentence-transformers')
+            raise Exception('TextEncoder requires: pip install sentence-transformers')
         try:
             import torch
         except ImportError:
