@@ -25,6 +25,30 @@ entries:
       title: Preprocessing
       url: preprocessing.html
     - output: web,pdf
+      title: Base Metalearner
+      url: meta.base.html
+    - output: web,pdf
+      title: Metalearner Explainer
+      url: meta.explainer.html
+    - output: web,pdf
+      title: Metalearner Utils
+      url: meta.utils.html
+    - output: web,pdf
+      title: Metalearner Propensity
+      url: meta.propensity.html
+    - output: web,pdf
+      title: T-Learner
+      url: meta.tlearner.html
+    - output: web,pdf
+      title: S-Learner
+      url: meta.slearner.html
+    - output: web,pdf
+      title: X-Learner
+      url: meta.xlearner.html
+    - output: web,pdf
+      title: R-Learner
+      url: meta.rlearner.html
+    - output: web,pdf
       title: Examples
       url: examples.html
     output: web

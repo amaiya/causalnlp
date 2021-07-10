@@ -6,6 +6,14 @@
     "Analyzers": "analyzers.html",
     "Key Driver Analysis": "key_driver_analysis.html",
     "Preprocessing": "preprocessing.html",
+    "Base Metalearner": "meta.base.html",
+    "Metalearner Explainer": "meta.explainer.html",
+    "Metalearner Utils": "meta.utils.html",
+    "Metalearner Propensity": "meta.propensity.html",
+    "T-Learner": "meta.tlearner.html",
+    "S-Learner": "meta.slearner.html",
+    "X-Learner": "meta.xlearner.html",
+    "R-Learner": "meta.rlearner.html",
     "Examples": "examples.html"
   }
 }

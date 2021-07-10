@@ -6,11 +6,13 @@ __all__ = ['CausalInferenceModel', 'metalearner_cls_dict', 'metalearner_reg_dict
 import pandas as pd
 pd.set_option('display.max_columns', 500)
 import time
-from causalml.inference.meta import BaseTClassifier, BaseXClassifier, BaseRClassifier, BaseSClassifier
-from causalml.inference.meta import BaseTRegressor, BaseXRegressor, BaseRRegressor, BaseSRegressor
-from causalml.inference.meta import LRSRegressor
-from causalml.propensity import ElasticNetPropensityModel
-from causalml.match import NearestNeighborMatch, create_table_one
+
+from .meta.tlearner import BaseTClassifier, BaseTRegressor
+from .meta.slearner import BaseSClassifier, BaseSRegressor, LRSRegressor
+from .meta.xlearner import BaseXClassifier, BaseXRegressor
+from .meta.rlearner import BaseRClassifier, BaseRRegressor
+from .meta.propensity import ElasticNetPropensityModel
+from .meta.utils import NearestNeighborMatch, create_table_one
 from scipy import stats
 from lightgbm import LGBMClassifier, LGBMRegressor
 import numpy as np
