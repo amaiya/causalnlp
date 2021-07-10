@@ -135,13 +135,14 @@ class TextEncoder():
           - device(str): device to use (e.g., 'cuda', 'cpu')
         """
         try:
-            import torch
-        except ImportError:
-            raise Exception('PyTorch must be installed.')
-        try:
             from sentence_transformers import SentenceTransformer, util
         except ImportError:
             raise Exception('Embeddings requires: pip install sentence-transformers')
+        try:
+            import torch
+        except ImportError:
+            raise Exception('PyTorch must be installed.')
+
         self.torch_device = device
         if self.torch_device is None: self.torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.model = SentenceTransformer(model_name)
