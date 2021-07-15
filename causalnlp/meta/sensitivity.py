@@ -158,7 +158,7 @@ class Sensitivity(object):
         """
 
         learner = self.learner
-        from ..inference.meta.tlearner import BaseTLearner
+        from .tlearner import BaseTLearner
         if isinstance(learner, BaseTLearner):
             ate, ate_lower, ate_upper = learner.estimate_ate(X=X, treatment=treatment, y=y)
         else:
@@ -181,8 +181,8 @@ class Sensitivity(object):
         class_name = 'Sensitivity' + method_name.replace(' ', '')
 
         try:
-            getattr(import_module('causalml.metrics.sensitivity'), class_name)
-            return getattr(import_module('causalml.metrics.sensitivity'), class_name)
+            getattr(import_module('causalnlp.meta.sensitivity'), class_name)
+            return getattr(import_module('causalnlp.meta.sensitivity'), class_name)
         except AttributeError:
             raise AttributeError('{} is not an existing method for sensitiviy analysis.'.format(method_name) +
                               ' Select one of {}'.format(method_list))
@@ -239,7 +239,7 @@ class Sensitivity(object):
         method_name = method
 
         X = self.df[self.inference_features].values
-        p = self.df[self.p_col].values
+        p = self.df[self.p_col].values if self.p_col is not None else None
         treatment = self.df[self.treatment_col].values
         y = self.df[self.outcome_col].values
 
@@ -274,7 +274,7 @@ class SensitivityPlaceboTreatment(Sensitivity):
         num_rows = self.df.shape[0]
 
         X = self.df[self.inference_features].values
-        p = self.df[self.p_col].values
+        p = self.df[self.p_col].values if self.p_col is not None else None
         treatment_new = np.random.randint(2, size=num_rows)
         y = self.df[self.outcome_col].values
 
@@ -294,7 +294,7 @@ class SensitivityRandomCause(Sensitivity):
         new_data = np.random.randn(num_rows)
 
         X = self.df[self.inference_features].values
-        p = self.df[self.p_col].values
+        p = self.df[self.p_col].values if self.p_col is not None else None
         treatment = self.df[self.treatment_col].values
         y = self.df[self.outcome_col].values
         X_new = np.hstack((X, new_data.reshape((-1, 1))))
@@ -325,7 +325,7 @@ class SensitivityRandomReplace(Sensitivity):
         df_new[self.replaced_feature] = np.random.randn(num_rows)
 
         X_new = df_new[self.inference_features].values
-        p_new = df_new[self.p_col].values
+        p_new = df_new[self.p_col].values if self.p_col is not None else None
         treatment_new = df_new[self.treatment_col].values
         y_new = df_new[self.outcome_col].values
 
@@ -346,7 +346,7 @@ class SensitivitySubsetData(Sensitivity):
         df_new = self.df.sample(frac=self.sample_size).copy()
 
         X_new = df_new[self.inference_features].values
-        p_new = df_new[self.p_col].values
+        p_new = df_new[self.p_col].values if self.p_col is not None else None
         treatment_new = df_new[self.treatment_col].values
         y_new = df_new[self.outcome_col].values
 
@@ -412,7 +412,7 @@ class SensitivitySelectionBias(Sensitivity):
         confound = self.confound
         df = self.df
         X = df[self.inference_features].values
-        p = df[self.p_col].values
+        p = df[self.p_col].values if self.p_col is not None else None
         treatment = df[self.treatment_col].values
         y = df[self.outcome_col].values
 

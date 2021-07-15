@@ -377,3 +377,34 @@ class CausalInferenceModel:
         best_params = gs.best_params_
         self.learner = learner_type(**best_params)
         return best_params
+
+    def evaluate_robustness(self):
+        """
+        Evaluates robustness on four sensitivity measures (see CausalML package for details on these methods):
+        - **Placebo Treatment**: ATE should become 0.
+        - **Random Add**: ATE should not change. (Called RandomCause in CausalML)
+        - **Random Replacement**: ATE should not change.
+        - **Subset Data**: ATE should not change.
+        """
+        from .meta.sensitivity import Sensitivity
+        data_df = self.x.copy()
+        t_col = 'CausalNLP_t'
+        y_col = 'CausalNLP_y'
+        data_df[t_col] = self.treatment
+        data_df[y_col] = self.y
+        sens_x = Sensitivity(df=data_df,
+                             inference_features=self.x.columns.values,
+                             p_col=None,
+                             treatment_col=t_col, outcome_col=y_col,
+                             learner=self.model)
+        df = sens_x.sensitivity_analysis(methods=['Placebo Treatment',
+                                                  'Random Cause',
+                                                  'Subset Data',
+                                                  'Random Replace',
+                                                    ],sample_size=0.5)
+        df['Distance from Desired (should be near 0)'] = np.where(df['Method']=='Placebo Treatment',
+                                                             df['New ATE']-0.0,
+                                                             df['New ATE']-df['ATE'])
+        # quickfix for poorly named sensitivity method
+        df['Method'] = np.where(df['Method']=='Random Cause', 'Random Add', df['Method'])
+        return df
