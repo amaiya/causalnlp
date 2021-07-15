@@ -22,7 +22,7 @@
 
 ## Usage
 
-To try out the examples yourself:
+To try out the [examples](https://amaiya.github.io/causalnlp/examples.html) yourself:
 
 <a href="https://colab.research.google.com/drive/1hu7j2QCWkVlFsKbuereWWRDOBy1anMbQ?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
