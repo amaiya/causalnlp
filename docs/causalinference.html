@@ -244,12 +244,12 @@ For instance, to estimate the average treatment effect for only those individual
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.evaluate_robustness" class="doc_header"><code>CausalInferenceModel.evaluate_robustness</code><a href="__main__.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.evaluate_robustness</code>()</p>
+<h4 id="CausalInferenceModel.evaluate_robustness" class="doc_header"><code>CausalInferenceModel.evaluate_robustness</code><a href="__main__.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.evaluate_robustness</code>(<strong><code>sample_size</code></strong>=<em><code>0.8</code></em>)</p>
 </blockquote>
 <p>Evaluates robustness on four sensitivity measures (see CausalML package for details on these methods):</p>
 <ul>
-<li><strong>Placebo Treatment</strong>: ATE should become 0.</li>
-<li><strong>Random Add</strong>: ATE should not change. (Called RandomCause in CausalML)</li>
+<li><strong>Placebo Treatment</strong>: ATE should become zero.</li>
+<li><strong>Random Cause</strong>: ATE should not change.</li>
 <li><strong>Random Replacement</strong>: ATE should not change.</li>
 <li><strong>Subset Data</strong>: ATE should not change.</li>
 </ul>
