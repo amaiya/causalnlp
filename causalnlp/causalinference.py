@@ -20,6 +20,7 @@ import warnings
 from copy import deepcopy
 from matplotlib import pyplot as plt
 from .preprocessing import DataframePreprocessor
+from sklearn.linear_model import LogisticRegression, LinearRegression
 
 # from xgboost import XGBRegressor
 # from causalml.inference.meta import XGBTRegressor, MLPTRegressor
@@ -52,15 +53,16 @@ class CausalInferenceModel:
     **Parameters:**
 
     * **df** : pandas.DataFrame containing dataset
-    * **metalearner_type** : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
-
+    * **method** : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')
+    * **metalearner_type** : Alias of `method` for backwards compatibility. Overrides `method` if not None.
     * **treatment_col** : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.
     * **outcome_col** : outcome variable; column should contain the categorical or numeric outcome values
     * **text_col** : (optional) text column containing the strings (e.g., articles, reviews, emails).
     * **ignore_cols** : columns to ignore in the analysis
     * **include_cols** : columns to include as covariates (e.g., possible confounders)
     * **treatment_effect_col** : name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.
-    * **learner** : an instance of a custom learner.  If None, a default LightGBM will be used.
+    * **learner** : an instance of a custom learner.  If None, Log/Lin Regression is used for S-Learner
+                    and a default LightGBM model will be used for all other metalearner types.
         # Example
          learner = LGBMClassifier(num_leaves=1000)
     * **effect_learner**: used for x-learner/r-learner and must be regression model
@@ -72,7 +74,8 @@ class CausalInferenceModel:
     """
     def __init__(self,
                  df,
-                 metalearner_type='t-learner',
+                 method='t-learner',
+                 metalearner_type=None, # alias for method
                  treatment_col='treatment',
                  outcome_col='outcome',
                  text_col=None,
@@ -89,11 +92,18 @@ class CausalInferenceModel:
         """
         constructor
         """
+        # for backwards compatibility
+        if metalearner_type is not None:
+            if method != 't-learner':
+                warnings.warn(f'metalearner_type and method are mutually exclusive. '+\
+                              f'Used {metalearner_type} as method.')
+            method = metalearner_type
+
         metalearner_list = list(metalearner_cls_dict.keys())
-        if metalearner_type not in metalearner_list:
-            raise ValueError('metalearner_type is required and must be one of: %s' % (metalearner_list))
+        if method not in metalearner_list:
+            raise ValueError('method is required and must be one of: %s' % (metalearner_list))
         self.te = treatment_effect_col # created
-        self.metalearner_type = metalearner_type
+        self.method = method
         self.v = verbose
         self.df = df.copy()
 
@@ -118,7 +128,7 @@ class CausalInferenceModel:
                                                                      stop_words=stop_words)
 
         # setup model
-        self.model = self._create_metalearner(metalearner_type=self.metalearner_type,
+        self.model = self._create_metalearner(metalearner_type=self.method,
                                              supplied_learner=learner,
                                              supplied_effect_learner=effect_learner)
 
@@ -126,15 +136,15 @@ class CausalInferenceModel:
 
     def _create_metalearner(self, metalearner_type='t-learner',
                             supplied_learner=None, supplied_effect_learner=None):
-        # use LRSRegressor for s-learner regression as default instead of tree-based model
-        if metalearner_type =='s-learner' and supplied_learner is None: return LRSRegressor()
+        ## use LRSRegressor for s-learner regression as default instead of tree-based model
+        #if metalearner_type =='s-learner' and supplied_learner is None: return LRSRegressor()
 
         # set learner
         default_learner = None
         if self.pp.is_classification:
-            default_learner = LGBMClassifier()
+            default_learner = LogisticRegression() if metalearner_type=='s-learner' else LGBMClassifier()
         else:
-            default_learner =  LGBMRegressor()
+            default_learner =  LinearRegression() if metalearner_type=='s-learner' else LGBMRegressor()
         default_effect_learner = LGBMRegressor()
         learner = default_learner if supplied_learner is None else supplied_learner
         effect_learner = default_effect_learner if supplied_effect_learner is None else\
@@ -227,16 +237,22 @@ class CausalInferenceModel:
         return fn(X=self.x, tau=tau, features = feature_names)
 
 
-    def balance(self, caliper = None, overwrite=True):
+    def compute_propensity_scores(self, n_fold=3):
+        """
+        Computes and returns propensity scores for `CausalInferenceModel.treatment`
+        """
+        pm = ElasticNetPropensityModel(n_fold=n_fold, random_state=42, max_iter=10000)
+        return pm.fit_predict(self.x, self.treatment)
+
+
+
+    def _balance(self, caliper = None, n_fold=3, overwrite=False):
         """
         Balances dataset to minimize bias.  Currently uses propensity score matching.
+        Experimental and untested.
         """
-        if overwrite:
-            warnings.warn('Since overwrite=True, balancing prunes the dataset.  ' +\
-                          'To revert, re-invoke CausalInferencModel ' +\
-                          'with original dataset.')
         if caliper is None:
-            warnings.warn('Since caliper is None, caliper being set to 0.001.')
+            warnings.warn('Since caliper is None, caliper is being set to 0.001.')
             caliper = 0.001
 
         print('-------Start balancing procedure----------')
@@ -245,11 +261,8 @@ class CausalInferenceModel:
         df_match = self.x.merge(self.treatment,left_index=True, right_index=True)
         df_match = df_match.merge(self.y, left_index=True, right_index=True)
 
-        #buld propensity model. Propensity is the probability of raw belongs to control group.
-        pm = ElasticNetPropensityModel(n_fold=3, random_state=42)
-
         #ps - propensity score
-        df_match['ps'] = pm.fit_predict(self.x, self.treatment)
+        df_match['ps'] = self.compute_propensity_scores(n_fold=n_fold)
 
         #Matching model object
         psm = NearestNeighborMatch(replace=False,
@@ -263,28 +276,29 @@ class CausalInferenceModel:
         #Apply matching model
         #If error, then sample is unbiased and we don't do anything
         self.flg_bias = True
-        self.df_unbiased = psm.match(data=df_match, treatment_col=self.pp.treatment_col,score_cols=['ps'])
-        self.x_matched = self.df_unbiased[self.x.columns]
-        self.y_matched = self.df_unbiased[self.pp.outcome_col]
-        self.treatment_matched = self.df_unbiased[self.pp.treatment_col]
+        self.df_matched = psm.match(data=df_match, treatment_col=self.pp.treatment_col,score_cols=['ps'])
+        self.x_matched = self.df_matched[self.x.columns]
+        self.y_matched = self.df_matched[self.pp.outcome_col]
+        self.treatment_matched = self.df_matched[self.pp.treatment_col]
         print('-------------------MATCHING RESULTS----------------')
         print('-----BEFORE MATCHING-------')
         print(create_table_one(data=df_match,
                                 treatment_col=self.pp.treatment_col,
                                 features=list(self.pp.feature_names_one_hot)))
         print('-----AFTER MATCHING-------')
-        print(create_table_one(data=self.df_unbiased,
+        print(create_table_one(data=self.df_matched,
                                 treatment_col=self.pp.treatment_col,
                                 features=list(self.pp.feature_names_one_hot)))
         if overwrite:
             self.x = self.x_matched
             self.y = self.y_matched
             self.treatment = self.treatment_matched
-            print('\n\Balancing prunes the dataset.  ' +\
+            self.df = self.df_matched
+            print('\nBalancing prunes the dataset.  ' +\
                       'To revert, re-invoke CausalInferencModel ' +\
                        'with original dataset.')
         else:
-            print('Balanced data is available as self.x_matched, self.y_matched, self.treatment_matched.')
+            print('\nBalanced data is available as variables: x_matched, y_matched, treatment_matched, df_matched')
         return
 
     def _predict_shap(self, x):

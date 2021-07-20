@@ -6,16 +6,18 @@ Most recent releases are shown at the top. Each release shows:
 - **Changed**: Additional parameters, changes to inputs or outputs, etc
 - **Fixed**: Bug fixes that don't change documented behaviour
 
-## 0.3.2 (2021-07-19)
+## 0.3.2 (2021-07-20)
 
 ### New:
 - N/A
 
 ### Changed
-- Use `LRSRegressor` as default learner for `s-learner`
+- Use `LinearRegression` and `LogisticRegression` as default base learners for `s-learner`.
+- changed parameter name of `metalearner_type` to `method` in `CausalInferenceModel`.
 
 ### Fixed:
-- Resolved mis-references in `_minimize_bias`
+- Resolved mis-references in `_balance` method (renamed from `_minimize_bias`).
+- Fixed convergence issues and factored out propensity score computations to `CausalInferenceModel.compute_propensity_scores`.
 
 
 ## 0.3.1 (2021-07-19)
