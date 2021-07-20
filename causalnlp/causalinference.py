@@ -227,12 +227,19 @@ class CausalInferenceModel:
         return fn(X=self.x, tau=tau, features = feature_names)
 
 
-    def _minimize_bias(self, caliper = None):
+    def balance(self, caliper = None, overwrite=True):
         """
-        minimize bias (experimental/untested)
+        Balances dataset to minimize bias.  Currently uses propensity score matching.
         """
+        if overwrite:
+            warnings.warn('Since overwrite=True, balancing prunes the dataset.  ' +\
+                          'To revert, re-invoke CausalInferencModel ' +\
+                          'with original dataset.')
+        if caliper is None:
+            warnings.warn('Since caliper is None, caliper being set to 0.001.')
+            caliper = 0.001
 
-        print('-------Start bias minimization procedure----------')
+        print('-------Start balancing procedure----------')
         start_time = time.time()
         #Join x, y and treatment vectors
         df_match = self.x.merge(self.treatment,left_index=True, right_index=True)
@@ -257,9 +264,9 @@ class CausalInferenceModel:
         #If error, then sample is unbiased and we don't do anything
         self.flg_bias = True
         self.df_unbiased = psm.match(data=df_match, treatment_col=self.pp.treatment_col,score_cols=['ps'])
-        self.x_unbiased = self.df_unbiased[self.x.columns]
-        self.y_unbiased = self.df_unbiased[self.pp.outcome_col]
-        self.treatment_unbiased = self.df_unbiased[self.pp.treatment_col]
+        self.x_matched = self.df_unbiased[self.x.columns]
+        self.y_matched = self.df_unbiased[self.pp.outcome_col]
+        self.treatment_matched = self.df_unbiased[self.pp.treatment_col]
         print('-------------------MATCHING RESULTS----------------')
         print('-----BEFORE MATCHING-------')
         print(create_table_one(data=df_match,
@@ -269,7 +276,16 @@ class CausalInferenceModel:
         print(create_table_one(data=self.df_unbiased,
                                 treatment_col=self.pp.treatment_col,
                                 features=list(self.pp.feature_names_one_hot)))
-        return self.df_unbiased
+        if overwrite:
+            self.x = self.x_matched
+            self.y = self.y_matched
+            self.treatment = self.treatment_matched
+            print('\n\Balancing prunes the dataset.  ' +\
+                      'To revert, re-invoke CausalInferencModel ' +\
+                       'with original dataset.')
+        else:
+            print('Balanced data is available as self.x_matched, self.y_matched, self.treatment_matched.')
+        return
 
     def _predict_shap(self, x):
         return self._predict(x)
