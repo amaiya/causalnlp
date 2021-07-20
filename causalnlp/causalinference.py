@@ -247,25 +247,25 @@ class CausalInferenceModel:
                        random_state=423,
                        caliper=caliper)
 
-        ps_cols = list(self.feature_names_one_hot)
+        ps_cols = list(self.pp.feature_names_one_hot)
         ps_cols.append('ps')
 
         #Apply matching model
         #If error, then sample is unbiased and we don't do anything
         self.flg_bias = True
-        self.df_unbiased = psm.match(data=df_match, treatment_col='treatment',score_cols=['ps'])
+        self.df_unbiased = psm.match(data=df_match, treatment_col=self.pp.treatment_col,score_cols=['ps'])
         self.x_unbiased = self.df_unbiased[self.x.columns]
-        self.y_unbiased = self.df_unbiased[self.outcome_col]
-        self.treatment_unbiased = self.df_unbiased['treatment']
+        self.y_unbiased = self.df_unbiased[self.pp.outcome_col]
+        self.treatment_unbiased = self.df_unbiased[self.pp.treatment_col]
         print('-------------------MATCHING RESULTS----------------')
         print('-----BEFORE MATCHING-------')
         print(create_table_one(data=df_match,
-                                treatment_col='treatment',
-                                features=list(self.feature_names_one_hot)))
+                                treatment_col=self.pp.treatment_col,
+                                features=list(self.pp.feature_names_one_hot)))
         print('-----AFTER MATCHING-------')
         print(create_table_one(data=self.df_unbiased,
-                                treatment_col='treatment',
-                                features=list(self.feature_names_one_hot)))
+                                treatment_col=self.pp.treatment_col,
+                                features=list(self.pp.feature_names_one_hot)))
         return self.df_unbiased
 
     def _predict_shap(self, x):
