@@ -40,7 +40,7 @@ nb_path: "nbs/00_causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L39" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>method</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>metalearner_type</code></strong>=<em><code>None</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/causalinference.py#L38" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>metalearner_type</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Infers causality from the data contained in <code>df</code> using a metalearner.</p>
 <p>Usage:</p>
@@ -53,17 +53,16 @@ nb_path: "nbs/00_causalinference.ipynb"
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><strong>df</strong> : pandas.DataFrame containing dataset</li>
-<li><strong>method</strong> : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')</li>
-<li><strong>metalearner_type</strong> : Alias of <code>method</code> for backwards compatibility. Overrides <code>method</code> if not None.</li>
-<li><strong>treatment_col</strong> : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.</li>
+<li><p><strong>metalearner_type</strong> : metalearner model to use. One of {'t-learner', 's-learner', 'x-learner', 'r-learner'} (Default: 't-learner')</p>
+</li>
+<li><p><strong>treatment_col</strong> : treatment variable; column should contain binary values: 1 for treated, 0 for untreated.</p>
+</li>
 <li><strong>outcome_col</strong> : outcome variable; column should contain the categorical or numeric outcome values</li>
 <li><strong>text_col</strong> : (optional) text column containing the strings (e.g., articles, reviews, emails).</li>
 <li><strong>ignore_cols</strong> : columns to ignore in the analysis</li>
 <li><strong>include_cols</strong> : columns to include as covariates (e.g., possible confounders)</li>
 <li><strong>treatment_effect_col</strong> : name of column to hold causal effect estimations.  Does not need to exist.  Created by CausalNLP.</li>
-<li><strong>learner</strong> : an instance of a custom learner.  If None, Log/Lin Regression is used for S-Learner
-<pre><code>          and a default LightGBM model will be used for all other metalearner types.
-</code></pre>
+<li><strong>learner</strong> : an instance of a custom learner.  If None, a default LightGBM will be used.
   # Example
    learner = LGBMClassifier(num_leaves=1000)</li>
 <li><strong>effect_learner</strong>: used for x-learner/r-learner and must be regression model</li>

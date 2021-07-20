@@ -142,7 +142,7 @@ class CausalInferenceModel:
         # set learner
         default_learner = None
         if self.pp.is_classification:
-            default_learner = LogisticRegression() if metalearner_type=='s-learner' else LGBMClassifier()
+            default_learner = LogisticRegression(max_iter=10000) if metalearner_type=='s-learner' else LGBMClassifier()
         else:
             default_learner =  LinearRegression() if metalearner_type=='s-learner' else LGBMRegressor()
         default_effect_learner = LGBMRegressor()
