@@ -126,6 +126,9 @@ class CausalInferenceModel:
 
     def _create_metalearner(self, metalearner_type='t-learner',
                             supplied_learner=None, supplied_effect_learner=None):
+        # use LRSRegressor for s-learner regression as default instead of tree-based model
+        if metalearner_type =='s-learner' and supplied_learner is None: return LRSRegressor()
+
         # set learner
         default_learner = None
         if self.pp.is_classification:

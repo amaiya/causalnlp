@@ -29,7 +29,7 @@ entries:
       url: meta.base.html
     - output: web,pdf
       title: T-Learner
-      url: meta.tleaerner.html
+      url: meta.tlearner.html
     - output: web,pdf
       title: S-Learner
       url: meta.slearner.html
