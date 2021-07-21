@@ -240,7 +240,7 @@ def compute_propensity_score(X, treatment, p_model=None, X_pred=None, treatment_
     if treatment_pred is None:
         treatment_pred = treatment.copy()
     if p_model is None:
-        p_model = ElasticNetPropensityModel(max_iter=10000)
+        p_model = ElasticNetPropensityModel()
 
     p_model.fit(X, treatment)
 
