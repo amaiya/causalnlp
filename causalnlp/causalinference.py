@@ -128,34 +128,34 @@ class CausalInferenceModel:
                                                                      stop_words=stop_words)
 
         # setup model
-        self.model = self._create_metalearner(metalearner_type=self.method,
+        self.model = self._create_metalearner(method=self.method,
                                              supplied_learner=learner,
                                              supplied_effect_learner=effect_learner)
 
 
 
-    def _create_metalearner(self, metalearner_type='t-learner',
+    def _create_metalearner(self, method='t-learner',
                             supplied_learner=None, supplied_effect_learner=None):
         ## use LRSRegressor for s-learner regression as default instead of tree-based model
-        #if metalearner_type =='s-learner' and supplied_learner is None: return LRSRegressor()
+        #if method =='s-learner' and supplied_learner is None: return LRSRegressor()
 
         # set learner
         default_learner = None
         if self.pp.is_classification:
-            default_learner = LogisticRegression(max_iter=10000) if metalearner_type=='s-learner' else LGBMClassifier()
+            default_learner = LogisticRegression(max_iter=10000) if method=='s-learner' else LGBMClassifier()
         else:
-            default_learner =  LinearRegression() if metalearner_type=='s-learner' else LGBMRegressor()
+            default_learner =  LinearRegression() if method=='s-learner' else LGBMRegressor()
         default_effect_learner = LGBMRegressor()
         learner = default_learner if supplied_learner is None else supplied_learner
         effect_learner = default_effect_learner if supplied_effect_learner is None else\
                          supplied_effect_learner
 
         # set metalearner
-        metalearner_class = metalearner_cls_dict[metalearner_type] if self.pp.is_classification \
-                                                                   else metalearner_reg_dict[metalearner_type]
-        if metalearner_type in ['t-learner', 's-learner']:
+        metalearner_class = metalearner_cls_dict[method] if self.pp.is_classification \
+                                                                   else metalearner_reg_dict[method]
+        if method in ['t-learner', 's-learner']:
             model = metalearner_class(learner=learner,control_name=0)
-        elif metalearner_type in ['x-learner']:
+        elif method in ['x-learner']:
             model = metalearner_class(
                                       control_outcome_learner=deepcopy(learner),
                                       treatment_outcome_learner=deepcopy(learner),
