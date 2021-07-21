@@ -106,6 +106,7 @@ class CausalInferenceModel:
         self.method = method
         self.v = verbose
         self.df = df.copy()
+        self.ps = None # computed by _create_metalearner, if necessary
 
 
         # these are auto-populated by preprocess method
@@ -166,41 +167,48 @@ class CausalInferenceModel:
             model = metalearner_class(outcome_learner=deepcopy(learner),
                                       effect_learner=deepcopy(effect_learner),
                                       control_name=0)
+
         return model
 
 
-    def fit(self):
+    def fit(self, p=None):
         """
         Fits a causal inference model and estimates outcome
         with and without treatment for each observation.
+        For X-Learner and R-Learner, propensity scores will be computed
+        using default propensity model unless `p` is not None.
+        Parameter `p` is not used for other methods.
         """
         print("start fitting causal inference model")
         start_time = time.time()
-        self.model.fit(self.x.values, self.treatment.values, self.y.values)
+        self.model.fit(self.x.values, self.treatment.values, self.y.values, p=p)
         preds = self._predict(self.x)
         self.df[self.te] = preds
         print("time to fit causal inference model: ",-start_time + time.time()," sec")
         return self
 
-    def predict(self, df):
+    def predict(self, df, p=None):
         """
         Estimates the treatment effect for each observation in `df`.
         The DataFrame represented by `df` should be the same format
         as the one supplied to `CausalInferenceModel.__init__`.
+        For X-Learner and R-Learner, propensity scores will be computed
+        using default propensity model unless `p` is not None.
+        Parameter `p` is not used for other methods.
         """
         _, x, _, _ = self.pp.preprocess(df, training=False)
-        return self._predict(x)
+        return self._predict(x, p=p)
 
 
-    def _predict(self, x):
+    def _predict(self, x, p=None):
         """
         Estimates the treatment effect for each observation in `x`,
         where `x` is an **un-preprocessed** DataFrame of Numpy array.
         """
         if isinstance(x, pd.DataFrame):
-            return self.model.predict(x.values)
+            return self.model.predict(x.values, p=p)
         else:
-            return self.model.predict(x)
+            return self.model.predict(x, p=p)
 
     def estimate_ate(self, bool_mask=None):
         """
@@ -237,11 +245,11 @@ class CausalInferenceModel:
         return fn(X=self.x, tau=tau, features = feature_names)
 
 
-    def compute_propensity_scores(self, n_fold=3):
+    def compute_propensity_scores(self, n_fold=3, max_iter=100):
         """
         Computes and returns propensity scores for `CausalInferenceModel.treatment`
         """
-        pm = ElasticNetPropensityModel(n_fold=n_fold, random_state=42, max_iter=10000)
+        pm = ElasticNetPropensityModel(n_fold=n_fold, random_state=42, max_iter=max_iter)
         return pm.fit_predict(self.x, self.treatment)
 
 
