@@ -16,6 +16,7 @@ Most recent releases are shown at the top. Each release shows:
 
 ### Fixed:
 - Changed to `max_iter=10000` for default `LogisticRegression` base learner
+- Changed to `max_iter=10000` for propensity scoring in X-Learner and R-Learner
 
 
 ## 0.4.0 (2021-07-20)
