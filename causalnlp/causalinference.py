@@ -407,7 +407,7 @@ class CausalInferenceModel:
         gs = RandomizedSearchCV(
                 estimator=clf, param_distributions=param_test,
                 n_iter=n_HP_points_to_test,
-                scoring='roc_auc',
+                scoring=scoring,
                 cv=3,
                 refit=True,
                 random_state=random_state,
