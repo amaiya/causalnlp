@@ -378,7 +378,7 @@ class CausalInferenceModel:
                                                             random_state=random_state)
 
         fit_params={"early_stopping_rounds":30,
-                    "eval_metric" : 'auc',
+                    "eval_metric" : 'auc' if self.pp.is_classification else 'rmse',
                     "eval_set" : [(X_test,y_test)],
                     'eval_names': ['valid'],
                     'verbose': 100,
