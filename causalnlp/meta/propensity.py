@@ -26,7 +26,7 @@ import logging
 import numpy as np
 from pygam import LogisticGAM, s
 from sklearn.metrics import roc_auc_score as auc
-from sklearn.linear_model import LogisticRegressionCV
+from sklearn.linear_model import LogisticRegressionCV, LogisticRegression
 from sklearn.model_selection import StratifiedKFold, train_test_split
 import xgboost as xgb
 
@@ -240,7 +240,12 @@ def compute_propensity_score(X, treatment, p_model=None, X_pred=None, treatment_
     if treatment_pred is None:
         treatment_pred = treatment.copy()
     if p_model is None:
-        p_model = ElasticNetPropensityModel()
+        #p_model = ElasticNetPropensityModel()
+        p_model = LogisticRegression(max_iter=10000, penalty='elasticnet', solver='saga', l1_ratio=0.5, random_state=42)
+    print('computing propensity scores...')
+    p_model.fit(X, treatment)
+    print('done.')
+
 
     p_model.fit(X, treatment)
 
