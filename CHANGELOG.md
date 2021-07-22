@@ -16,6 +16,7 @@ Most recent releases are shown at the top. Each release shows:
 - Removed CV from propensity score computations in X-Learner and R-Learner and increase default `max_iter` to 10000
 
 ### Fixed:
+- Resolved problem with `CausalInferenceModel.tune_and_use_default_learner` when outcome is continuous
 - Changed to `max_iter=10000` for default `LogisticRegression` base learner
 
 
