@@ -13,7 +13,7 @@ Most recent releases are shown at the top. Each release shows:
 
 ### Changed
 - Added `p` parameter to `CausalInferenceModel.fit` and `CausalInferenceModel.predict` for user-supplied propensity scores in X-Learner and R-Learner.
-- Removed CV from propensity score computations in X-Learner and R-Learner
+- Removed CV from propensity score computations in X-Learner and R-Learner and increase default `max_iter` to 10000
 
 ### Fixed:
 - Changed to `max_iter=10000` for default `LogisticRegression` base learner

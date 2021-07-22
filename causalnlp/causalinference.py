@@ -245,13 +245,13 @@ class CausalInferenceModel:
         return fn(X=self.x, tau=tau, features = feature_names)
 
 
-    def compute_propensity_scores(self, n_fold=3, max_iter=100):
+    def compute_propensity_scores(self, x_pred=None):
         """
         Computes and returns propensity scores for `CausalInferenceModel.treatment`
+        in addition to the Propensity model.
         """
-        pm = ElasticNetPropensityModel(n_fold=n_fold, random_state=42, max_iter=max_iter)
-        return pm.fit_predict(self.x, self.treatment)
-
+        from .meta import propensity
+        return propensity.compute_propensity_score(self.x, self.treatment, X_pred=x_pred)
 
 
     def _balance(self, caliper = None, n_fold=3, overwrite=False):
