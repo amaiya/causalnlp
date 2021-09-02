@@ -1,7 +1,8 @@
 {
   "causalnlp": {
     "Overview": "/",
-    "Causal Inference": "causalinference.html",
+    "Causal Inference": "core.causalinference.html",
+    "CausalBert": "core.causalbert.html",
     "Auto Coder": "autocoder.html",
     "Analyzers": "analyzers.html",
     "Key Driver Analysis": "key_driver_analysis.html",

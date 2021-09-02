@@ -47,7 +47,7 @@ We'll pretend the true sentiment (i.e., review rating and `T_true`) is hidden an
 Using the `text_col` parameter, we include the raw review text as another "controlled-for" variable.
 
 ```
-from causalnlp.causalinference import CausalInferenceModel
+from causalnlp import CausalInferenceModel
 from lightgbm import LGBMClassifier
 cm = CausalInferenceModel(df, 
                          metalearner_type='t-learner', learner=LGBMClassifier(num_leaves=500),

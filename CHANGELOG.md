@@ -6,10 +6,10 @@ Most recent releases are shown at the top. Each release shows:
 - **Changed**: Additional parameters, changes to inputs or outputs, etc
 - **Fixed**: Bug fixes that don't change documented behaviour
 
-## 0.4.1 (TBD)
+## 0.5.0 (TBD)
 
 ### New:
-- N/A
+- Added support for `CausalBert`
 
 ### Changed
 - Added `p` parameter to `CausalInferenceModel.fit` and `CausalInferenceModel.predict` for user-supplied propensity scores in X-Learner and R-Learner.

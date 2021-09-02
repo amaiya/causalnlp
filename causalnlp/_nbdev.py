@@ -2,9 +2,16 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"CausalInferenceModel": "00_causalinference.ipynb",
-         "metalearner_cls_dict": "00_causalinference.ipynb",
-         "metalearner_reg_dict": "00_causalinference.ipynb",
+index = {"CausalInferenceModel": "00a_core.causalinference.ipynb",
+         "metalearner_cls_dict": "00a_core.causalinference.ipynb",
+         "metalearner_reg_dict": "00a_core.causalinference.ipynb",
+         "platt_scale": "00b_core.causalbert.ipynb",
+         "gelu": "00b_core.causalbert.ipynb",
+         "make_bow_vector": "00b_core.causalbert.ipynb",
+         "CausalBert": "00b_core.causalbert.ipynb",
+         "CausalBertModel": "00b_core.causalbert.ipynb",
+         "CUDA": "00b_core.causalbert.ipynb",
+         "MASK_IDX": "00b_core.causalbert.ipynb",
          "Autocoder": "01_autocoder.ipynb",
          "list2chunks": "02_analyzers.ipynb",
          "ZeroShotClassifier": "02_analyzers.ipynb",
@@ -71,7 +78,8 @@ index = {"CausalInferenceModel": "00_causalinference.ipynb",
          "SensitivitySubsetData": "05i_meta.sensitivity.ipynb",
          "SensitivitySelectionBias": "05i_meta.sensitivity.ipynb"}
 
-modules = ["causalinference.py",
+modules = ["core/causalinference.py",
+           "core/causalbert.py",
            "autocoder.py",
            "analyzers.py",
            "key_driver_analysis.py",

@@ -11,7 +11,10 @@ entries:
       url: /
     - output: web,pdf
       title: Causal Inference
-      url: causalinference.html
+      url: core.causalinference.html
+    - output: web,pdf
+      title: CausalBert
+      url: core.causalbert.html
     - output: web,pdf
       title: Auto Coder
       url: autocoder.html
