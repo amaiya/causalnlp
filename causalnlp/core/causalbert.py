@@ -14,18 +14,20 @@ from collections import defaultdict
 import os
 import pickle
 
+try:
+    from torch.utils.data import Dataset, TensorDataset, DataLoader, RandomSampler, SequentialSampler
+    from torch.nn import CrossEntropyLoss
+    import torch
+    import torch.nn as nn
+except ImportError:
+    raise ImportError('CausalBert requires PyTorch. Please install it.')
+
 import scipy
 from sklearn.model_selection import KFold
-
-from torch.utils.data import Dataset, TensorDataset, DataLoader, RandomSampler, SequentialSampler
 
 from transformers.optimization import  AdamW, get_linear_schedule_with_warmup
 from transformers.models.distilbert import DistilBertModel, DistilBertPreTrainedModel, DistilBertTokenizer
 
-from torch.nn import CrossEntropyLoss
-
-import torch
-import torch.nn as nn
 from scipy.special import softmax
 import numpy as np
 from scipy.special import logit
