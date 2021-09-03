@@ -241,6 +241,67 @@ Returns:
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Example">Example<a class="anchor-link" href="#Example"> </a></h3><p>This implementation of <a href="/causalnlp/core.causalbert.html#CausalBert"><code>CausalBert</code></a> was adapted from <a href="https://arxiv.org/abs/2010.12919">Causal Effects of Linguistic Properties</a> by Pryzant et al.  <a href="/causalnlp/core.causalbert.html#CausalBert"><code>CausalBert</code></a> is essentially an S-Learner that uses a DistilBert sequence classification model as the base learner.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;sample_data/music_seed50.tsv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">causalnlp</span> <span class="kn">import</span> <span class="n">CausalBertModel</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">CausalBertModel</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;C_true&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;T_ac&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Y_sim&#39;</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">estimate_ate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;C_true&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Some weights of CausalBert were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: [&#39;Q_cls.1.0.bias&#39;, &#39;Q_cls.0.0.bias&#39;, &#39;g_cls.weight&#39;, &#39;Q_cls.1.0.weight&#39;, &#39;g_cls.bias&#39;, &#39;Q_cls.1.2.bias&#39;, &#39;Q_cls.0.2.weight&#39;, &#39;Q_cls.0.0.weight&#39;, &#39;Q_cls.0.2.bias&#39;, &#39;Q_cls.1.2.weight&#39;]
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+100%|██████████| 666/666 [02:12&lt;00:00,  5.01it/s]
+100%|██████████| 666/666 [00:27&lt;00:00, 24.32it/s]</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.17478953341997637
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 </div>
  
 
