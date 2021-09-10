@@ -38,7 +38,7 @@ The file `music_seed50.tsv` is a semi-simulated dataset from [here](https://gith
 - `Y_sim`: outcome, where 1 means product was clicked and 0 means not.
 - `text`: raw text of review
 - `rating`: rating associated with review (1 through 5)
-- `T_true`: 1 means rating less than 3, 0 means rating of 5, where `T_true` affects the outcome `Y_sim`.
+- `T_true`: 0 means rating less than 3, 1 means rating of 5, where `T_true` affects the outcome `Y_sim`.
 - `T_ac`: an approximation of true review sentiment (`T_true`) created with [Autocoder](https://amaiya.github.io/causalnlp/autocoder.html) from raw review text
 - `C_true`:confounding categorical variable (1=audio CD, 0=other)
 

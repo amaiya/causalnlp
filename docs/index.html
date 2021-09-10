@@ -114,7 +114,7 @@ nb_path: "nbs/index.ipynb"
 <li><code>Y_sim</code>: outcome, where 1 means product was clicked and 0 means not.</li>
 <li><code>text</code>: raw text of review</li>
 <li><code>rating</code>: rating associated with review (1 through 5)</li>
-<li><code>T_true</code>: 1 means rating less than 3, 0 means rating of 5, where <code>T_true</code> affects the outcome <code>Y_sim</code>.</li>
+<li><code>T_true</code>: 0 means rating less than 3, 1 means rating of 5, where <code>T_true</code> affects the outcome <code>Y_sim</code>.</li>
 <li><code>T_ac</code>: an approximation of true review sentiment (<code>T_true</code>) created with <a href="https://amaiya.github.io/causalnlp/autocoder.html">Autocoder</a> from raw review text</li>
 <li><code>C_true</code>:confounding categorical variable (1=audio CD, 0=other)</li>
 </ul>
