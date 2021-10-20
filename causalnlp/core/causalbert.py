@@ -179,15 +179,17 @@ class CausalBertModel:
     """CausalBertModel is a wrapper for CausalBert"""
 
     def __init__(self, g_weight=0.0, Q_weight=0.1, mlm_weight=1.0,
-        batch_size=32, max_length=128):
+        batch_size=32, max_length=128, model_name="distilbert-base-uncased"):
         """
         Trains a model to predict a binary outcome taking into account
         the text, the treatment, and a single binary confounder.
         The resultant model can be used to estimate treatment effects
         for observations.
         """
+        if 'distilbert' not in model_name:
+            raise ValueError('CausalBert currently only supports DistilBERT models')
         self.model = CausalBert.from_pretrained(
-            "distilbert-base-uncased",
+            model_name,
             num_labels=2,
             output_attentions=False,
             output_hidden_states=False)
