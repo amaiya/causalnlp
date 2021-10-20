@@ -6,6 +6,18 @@ Most recent releases are shown at the top. Each release shows:
 - **Changed**: Additional parameters, changes to inputs or outputs, etc
 - **Fixed**: Bug fixes that don't change documented behaviour
 
+## 0.6.0 (2021-10-20)
+
+### New:
+- Added `model_name` parameter to `CausalBertModel` to support other DistilBert models (e.g., multilingual)
+
+### Changed
+- N/A
+
+### Fixed:
+- N/A
+
+
 ## 0.5.0 (2021-09-03)
 
 ### New:
