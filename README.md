@@ -12,7 +12,7 @@
 - Sensitivity analysis to [assess robustness of causal estimates](https://amaiya.github.io/causalnlp/causalinference.html#CausalInferenceModel.evaluate_robustness)
 - Quick and simple [key driver analysis](https://amaiya.github.io/causalnlp/key_driver_analysis.html) to yield clues on potential drivers of an outcome based on predictive power, correlations, etc.
 - Can easily be applied to ["traditional" tabular datasets without text](https://amaiya.github.io/causalnlp/examples.html#What-is-the-causal-impact-of-having-a-PhD-on-making-over-$50K?) (i.e., datasets with only numerical and categorical variables)
-- Includes an experimental PyTorch implementation of [CausalBert](https://arxiv.org/abs/1905.12741) by Veitch, Sridar, and Blei (based on [reference implementation](https://github.com/rpryzant/causal-bert-pytorch) by R. Pryzant)
+- Includes an experimental [PyTorch implementation](https://amaiya.github.io/causalnlp/core.causalbert.html) of [CausalBert](https://arxiv.org/abs/1905.12741) by Veitch, Sridar, and Blei (based on [reference implementation](https://github.com/rpryzant/causal-bert-pytorch) by R. Pryzant)
 
 ## Install
 
