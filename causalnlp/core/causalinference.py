@@ -22,9 +22,6 @@ from matplotlib import pyplot as plt
 from ..preprocessing import DataframePreprocessor
 from sklearn.linear_model import LogisticRegression, LinearRegression
 
-# from xgboost import XGBRegressor
-# from causalml.inference.meta import XGBTRegressor, MLPTRegressor
-
 
 
 metalearner_cls_dict = {'t-learner' : BaseTClassifier,

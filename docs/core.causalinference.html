@@ -40,7 +40,7 @@ nb_path: "nbs/00a_core.causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/core/causalinference.py#L39" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>method</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>metalearner_type</code></strong>=<em><code>None</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="CausalInferenceModel" class="doc_header"><code>class</code> <code>CausalInferenceModel</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/core/causalinference.py#L36" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>CausalInferenceModel</code>(<strong><code>df</code></strong>, <strong><code>method</code></strong>=<em><code>'t-learner'</code></em>, <strong><code>metalearner_type</code></strong>=<em><code>None</code></em>, <strong><code>treatment_col</code></strong>=<em><code>'treatment'</code></em>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>treatment_effect_col</code></strong>=<em><code>'treatment_effect'</code></em>, <strong><code>learner</code></strong>=<em><code>None</code></em>, <strong><code>effect_learner</code></strong>=<em><code>None</code></em>, <strong><code>min_df</code></strong>=<em><code>0.05</code></em>, <strong><code>max_df</code></strong>=<em><code>0.5</code></em>, <strong><code>ngram_range</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>stop_words</code></strong>=<em><code>'english'</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Infers causality from the data contained in <code>df</code> using a metalearner.</p>
 <p>Usage:</p>
@@ -102,7 +102,7 @@ nb_path: "nbs/00a_core.causalinference.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.fit" class="doc_header"><code>CausalInferenceModel.fit</code><a href="__main__.py#L170" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.fit</code>(<strong><code>p</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CausalInferenceModel.fit" class="doc_header"><code>CausalInferenceModel.fit</code><a href="__main__.py#L167" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.fit</code>(<strong><code>p</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Fits a causal inference model and estimates outcome
 with and without treatment for each observation.
@@ -131,7 +131,7 @@ Parameter <code>p</code> is not used for other methods.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.tune_and_use_default_learner" class="doc_header"><code>CausalInferenceModel.tune_and_use_default_learner</code><a href="__main__.py#L363" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.tune_and_use_default_learner</code>(<strong><code>split_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>random_state</code></strong>=<em><code>314</code></em>, <strong><code>scoring</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CausalInferenceModel.tune_and_use_default_learner" class="doc_header"><code>CausalInferenceModel.tune_and_use_default_learner</code><a href="__main__.py#L360" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.tune_and_use_default_learner</code>(<strong><code>split_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>random_state</code></strong>=<em><code>314</code></em>, <strong><code>scoring</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Tunes the hyperparameters of a default LightGBM model, replaces <a href="/causalnlp/core.causalinference.html#CausalInferenceModel.learner"><code>CausalInferenceModel.learner</code></a>,
 and returns best parameters.
@@ -160,7 +160,7 @@ is used for regresssion.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.predict" class="doc_header"><code>CausalInferenceModel.predict</code><a href="__main__.py#L186" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.predict</code>(<strong><code>df</code></strong>, <strong><code>p</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CausalInferenceModel.predict" class="doc_header"><code>CausalInferenceModel.predict</code><a href="__main__.py#L183" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.predict</code>(<strong><code>df</code></strong>, <strong><code>p</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Estimates the treatment effect for each observation in <code>df</code>.
 The DataFrame represented by <code>df</code> should be the same format
@@ -190,7 +190,7 @@ Parameter <code>p</code> is not used for other methods.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.get_required_columns" class="doc_header"><code>CausalInferenceModel.get_required_columns</code><a href="__main__.py#L352" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.get_required_columns</code>()</p>
+<h4 id="CausalInferenceModel.get_required_columns" class="doc_header"><code>CausalInferenceModel.get_required_columns</code><a href="__main__.py#L349" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.get_required_columns</code>()</p>
 </blockquote>
 <p>Returns required columns that must exist in any DataFrame supplied to <a href="/causalnlp/core.causalinference.html#CausalInferenceModel.predict"><code>CausalInferenceModel.predict</code></a>.</p>
 
@@ -215,7 +215,7 @@ Parameter <code>p</code> is not used for other methods.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.estimate_ate" class="doc_header"><code>CausalInferenceModel.estimate_ate</code><a href="__main__.py#L209" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.estimate_ate</code>(<strong><code>bool_mask</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="CausalInferenceModel.estimate_ate" class="doc_header"><code>CausalInferenceModel.estimate_ate</code><a href="__main__.py#L206" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.estimate_ate</code>(<strong><code>bool_mask</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Estimates the treatment effect for each observation in
 <code>self.df</code>.</p>
@@ -251,7 +251,7 @@ For instance, to estimate the average treatment effect for only those individual
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.evaluate_robustness" class="doc_header"><code>CausalInferenceModel.evaluate_robustness</code><a href="__main__.py#L418" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.evaluate_robustness</code>(<strong><code>sample_size</code></strong>=<em><code>0.8</code></em>)</p>
+<h4 id="CausalInferenceModel.evaluate_robustness" class="doc_header"><code>CausalInferenceModel.evaluate_robustness</code><a href="__main__.py#L415" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.evaluate_robustness</code>(<strong><code>sample_size</code></strong>=<em><code>0.8</code></em>)</p>
 </blockquote>
 <p>Evaluates robustness on four sensitivity measures (see CausalML package for details on these methods):</p>
 <ul>
@@ -282,7 +282,7 @@ For instance, to estimate the average treatment effect for only those individual
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.interpret" class="doc_header"><code>CausalInferenceModel.interpret</code><a href="__main__.py#L220" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.interpret</code>(<strong><code>plot</code></strong>=<em><code>False</code></em>, <strong><code>method</code></strong>=<em><code>'feature_importance'</code></em>)</p>
+<h4 id="CausalInferenceModel.interpret" class="doc_header"><code>CausalInferenceModel.interpret</code><a href="__main__.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.interpret</code>(<strong><code>plot</code></strong>=<em><code>False</code></em>, <strong><code>method</code></strong>=<em><code>'feature_importance'</code></em>)</p>
 </blockquote>
 <p>Returns feature importances of treatment effect model.
 The method parameter must be one of {'feature_importance', 'shap_values'}</p>
@@ -308,7 +308,7 @@ The method parameter must be one of {'feature_importance', 'shap_values'}</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="CausalInferenceModel.explain" class="doc_header"><code>CausalInferenceModel.explain</code><a href="__main__.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.explain</code>(<strong><code>df</code></strong>, <strong><code>row_index</code></strong>=<em><code>None</code></em>, <strong><code>row_num</code></strong>=<em><code>0</code></em>, <strong><code>background_size</code></strong>=<em><code>50</code></em>, <strong><code>nsamples</code></strong>=<em><code>500</code></em>)</p>
+<h4 id="CausalInferenceModel.explain" class="doc_header"><code>CausalInferenceModel.explain</code><a href="__main__.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>CausalInferenceModel.explain</code>(<strong><code>df</code></strong>, <strong><code>row_index</code></strong>=<em><code>None</code></em>, <strong><code>row_num</code></strong>=<em><code>0</code></em>, <strong><code>background_size</code></strong>=<em><code>50</code></em>, <strong><code>nsamples</code></strong>=<em><code>500</code></em>)</p>
 </blockquote>
 <p>Explain the treatment effect estimate of a single observation using SHAP.</p>
 <p><strong>Parameters:</strong></p>

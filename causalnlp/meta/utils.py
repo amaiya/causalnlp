@@ -259,7 +259,7 @@ def regression_metrics(y, p, w=None, metrics={'RMSE': rmse, 'sMAPE': smape, 'Gin
 import logging
 from sklearn.metrics import log_loss, roc_auc_score
 
-logger = logging.getLogger('causalml')
+logger = logging.getLogger('causalnlp')
 
 
 def logloss(y, p):

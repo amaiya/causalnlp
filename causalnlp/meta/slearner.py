@@ -34,7 +34,7 @@ from .utils import check_treatment_vector, convert_pd_to_np
 from .utils import regression_metrics, classification_metrics
 
 
-logger = logging.getLogger('causalml')
+logger = logging.getLogger('causalnlp')
 
 
 class StatsmodelsOLS:

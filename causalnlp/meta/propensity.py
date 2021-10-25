@@ -31,7 +31,7 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 import xgboost as xgb
 
 
-logger = logging.getLogger('causalml')
+logger = logging.getLogger('causalnlp')
 
 
 class PropensityModel(metaclass=ABCMeta):
