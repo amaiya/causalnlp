@@ -8,7 +8,7 @@ pd.set_option('display.max_columns', 500)
 import time
 
 from ..meta.tlearner import BaseTClassifier, BaseTRegressor
-from ..meta.slearner import BaseSClassifier, BaseSRegressor, LRSRegressor
+from ..meta.slearner import BaseSClassifier, BaseSRegressor
 from ..meta.xlearner import BaseXClassifier, BaseXRegressor
 from ..meta.rlearner import BaseRClassifier, BaseRRegressor
 from ..meta.propensity import ElasticNetPropensityModel

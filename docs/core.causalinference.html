@@ -73,6 +73,113 @@ nb_path: "nbs/00a_core.causalinference.ipynb"
 <li><strong>stop_words</strong> : stop words used for text processing (from sklearn)</li>
 <li><strong>verbose</strong> : If 1, print informational messages.  If 0, suppress.</li>
 </ul>
+<table>
+<thead><tr>
+<th></th>
+<th>Type</th>
+<th>Default</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>df</code></strong></td>
+<td></td>
+<td></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>method</code></strong></td>
+<td><code>str</code></td>
+<td><code>t-learner</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>metalearner_type</code></strong></td>
+<td></td>
+<td><code>None</code></td>
+<td>alias for method</td>
+</tr>
+<tr>
+<td><strong><code>treatment_col</code></strong></td>
+<td><code>str</code></td>
+<td><code>treatment</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>outcome_col</code></strong></td>
+<td><code>str</code></td>
+<td><code>outcome</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>text_col</code></strong></td>
+<td></td>
+<td><code>None</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>ignore_cols</code></strong></td>
+<td><code>list</code></td>
+<td><code>None</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>include_cols</code></strong></td>
+<td><code>list</code></td>
+<td><code>None</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>treatment_effect_col</code></strong></td>
+<td><code>str</code></td>
+<td><code>treatment_effect</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>learner</code></strong></td>
+<td></td>
+<td><code>None</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>effect_learner</code></strong></td>
+<td></td>
+<td><code>None</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>min_df</code></strong></td>
+<td><code>float</code></td>
+<td><code>0.05</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>max_df</code></strong></td>
+<td><code>float</code></td>
+<td><code>0.5</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>ngram_range</code></strong></td>
+<td><code>tuple</code></td>
+<td><code>(1, 1)</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>stop_words</code></strong></td>
+<td><code>str</code></td>
+<td><code>english</code></td>
+<td><em>No Content</em></td>
+</tr>
+<tr>
+<td><strong><code>verbose</code></strong></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td><em>No Content</em></td>
+</tr>
+</tbody>
+</table>
 
 </div>
 
@@ -365,8 +472,7 @@ The method parameter must be one of {'feature_importance', 'shap_values'}</p>
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -422,8 +528,7 @@ The method parameter must be one of {'feature_importance', 'shap_values'}</p>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -605,8 +710,7 @@ The method parameter must be one of {'feature_importance', 'shap_values'}</p>
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -674,8 +778,7 @@ The method parameter must be one of {'feature_importance', 'shap_values'}</p>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -1433,8 +1536,7 @@ time to fit causal inference model:  0.5458502769470215  sec
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1502,8 +1604,7 @@ time to fit causal inference model:  0.5458502769470215  sec
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -1684,5 +1785,5 @@ time to fit causal inference model:  0.5112130641937256  sec
     {% endraw %}
 
 </div>
- 
+
 

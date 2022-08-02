@@ -40,7 +40,7 @@ nb_path: "nbs/03_key_driver_analysis.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="KeyDriverAnalysis" class="doc_header"><code>class</code> <code>KeyDriverAnalysis</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/key_driver_analysis.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KeyDriverAnalysis</code>(<strong><code>df</code></strong>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
+<h2 id="KeyDriverAnalysis" class="doc_header"><code>class</code> <code>KeyDriverAnalysis</code><a href="https://github.com/amaiya/causalnlp/tree/main/causalnlp/key_driver_analysis.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KeyDriverAnalysis</code>(<strong><code>df</code></strong>, <strong><code>outcome_col</code></strong>=<em><code>'outcome'</code></em>, <strong><code>text_col</code></strong>=<em><code>None</code></em>, <strong><code>include_cols</code></strong>=<em><code>[]</code></em>, <strong><code>ignore_cols</code></strong>=<em><code>[]</code></em>, <strong><code>verbose</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Performs key driver analysis</p>
 
@@ -72,7 +72,7 @@ nb_path: "nbs/03_key_driver_analysis.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="KeyDriverAnalysis.correlations" class="doc_header"><code>KeyDriverAnalysis.correlations</code><a href="__main__.py#L54" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>KeyDriverAnalysis.correlations</code>(<strong><code>outcome_only</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="KeyDriverAnalysis.correlations" class="doc_header"><code>KeyDriverAnalysis.correlations</code><a href="__main__.py#L53" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>KeyDriverAnalysis.correlations</code>(<strong><code>outcome_only</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Computes corelations between independent variables and outcome</p>
 
@@ -160,8 +160,7 @@ preprocess time:  0.3556947708129883  sec
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -205,8 +204,7 @@ preprocess time:  0.3556947708129883  sec
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -244,7 +242,7 @@ preprocess time:  0.3556947708129883  sec
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="KeyDriverAnalysis.importances" class="doc_header"><code>KeyDriverAnalysis.importances</code><a href="__main__.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>KeyDriverAnalysis.importances</code>(<strong><code>plot</code></strong>=<em><code>True</code></em>, <strong><code>split_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>use_shap</code></strong>=<em><code>False</code></em>, <strong><code>shap_background_size</code></strong>=<em><code>50</code></em>, <strong><code>rf_model</code></strong>=<em><code>None</code></em>, <strong><code>n_estimators</code></strong>=<em><code>100</code></em>, <strong><code>n_jobs</code></strong>=<em><code>-1</code></em>, <strong><code>random_state</code></strong>=<em><code>42</code></em>)</p>
+<h4 id="KeyDriverAnalysis.importances" class="doc_header"><code>KeyDriverAnalysis.importances</code><a href="__main__.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>KeyDriverAnalysis.importances</code>(<strong><code>plot</code></strong>=<em><code>True</code></em>, <strong><code>split_pct</code></strong>=<em><code>0.2</code></em>, <strong><code>use_shap</code></strong>=<em><code>False</code></em>, <strong><code>shap_background_size</code></strong>=<em><code>50</code></em>, <strong><code>rf_model</code></strong>=<em><code>None</code></em>, <strong><code>n_estimators</code></strong>=<em><code>100</code></em>, <strong><code>n_jobs</code></strong>=<em><code>-1</code></em>, <strong><code>random_state</code></strong>=<em><code>42</code></em>)</p>
 </blockquote>
 <p>Identifies important predictors using a RandomForest model.</p>
 
@@ -295,8 +293,7 @@ R^2 Validation Score: 0.89
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -346,8 +343,7 @@ R^2 Validation Score: 0.89
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -426,8 +422,7 @@ R^2 Validation Score: 0.85
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -477,8 +472,7 @@ R^2 Validation Score: 0.85
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -489,5 +483,5 @@ R^2 Validation Score: 0.85
     {% endraw %}
 
 </div>
- 
+
 

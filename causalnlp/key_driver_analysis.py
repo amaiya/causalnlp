@@ -10,7 +10,6 @@ import time
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import matplotlib.pyplot as plt
-import shap
 
 
 from .preprocessing import DataframePreprocessor
@@ -98,6 +97,11 @@ class KeyDriverAnalysis:
                                                                              rf.score(X_test, y_test)))
         driverNames = self.x.columns.values
         if use_shap:
+            try:
+                import shap
+            except ImportError:
+                raise ImportError('Please install shap (conda recommended): '+\
+                                 'conda search shap --channel conda-forge')
             explainer = shap.KernelExplainer(rf.predict, X_test[:shap_background_size,:])
             shap_values = explainer.shap_values(X_test[:shap_background_size,:])
             if plot:

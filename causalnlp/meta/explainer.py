@@ -22,7 +22,6 @@ __all__ = ['Explainer', 'VALID_METHODS']
 
 
 import pandas as pd
-import shap
 import matplotlib.pyplot as plt
 from lightgbm import LGBMRegressor
 from sklearn.inspection import permutation_importance
@@ -178,6 +177,12 @@ class Explainer(object):
         """
         Calculates shapley values for each treatment group.
         """
+        try:
+            import shap
+        except ImportError:
+            raise ImportError('Please install shap (conda is recommended): '+\
+                              'conda search shap --channel conda-forge')
+
         shap_dict = {}
         for group, mod in self.models_tau.items():
             explainer = shap.TreeExplainer(mod)
