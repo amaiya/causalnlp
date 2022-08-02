@@ -181,7 +181,7 @@ class Explainer(object):
             import shap
         except ImportError:
             raise ImportError('Please install shap (conda is recommended): '+\
-                              'conda search shap --channel conda-forge')
+                              'conda install shap --channel conda-forge')
 
         shap_dict = {}
         for group, mod in self.models_tau.items():
@@ -213,6 +213,12 @@ class Explainer(object):
         Calculates and plots the distribution of shapley values of each feature, for each treatment group.
         Skips the calculation part if shap_dict is given.
         """
+        try:
+            import shap
+        except ImportError:
+            raise ImportError('Please install shap (conda is recommended): '+\
+                              'conda install shap --channel conda-forge')
+
         if shap_dict is None:
             shap_dict = self.get_shap_values()
 
@@ -239,6 +245,11 @@ class Explainer(object):
                 strongest interaction (note that to find to true strongest interaction you need to compute
                 the SHAP interaction values).
         """
+        try:
+            import shap
+        except ImportError:
+            raise ImportError('Please install shap (conda is recommended): '+\
+                              'conda install shap --channel conda-forge')
         if shap_dict is None:
             shap_dict = self.get_shap_values()
 
