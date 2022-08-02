@@ -101,7 +101,7 @@ class KeyDriverAnalysis:
                 import shap
             except ImportError:
                 raise ImportError('Please install shap (conda recommended): '+\
-                                 'conda search shap --channel conda-forge')
+                                 'conda install shap --channel conda-forge')
             explainer = shap.KernelExplainer(rf.predict, X_test[:shap_background_size,:])
             shap_values = explainer.shap_values(X_test[:shap_background_size,:])
             if plot:
