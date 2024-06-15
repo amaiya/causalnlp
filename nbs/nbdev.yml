@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "causalnlp"
+  site-url: "https://amaiya.github.io/causalnlp/"
+  description: "CausalNLP: A Practical Toolkit for Causal Inference with Text"
+  repo-branch: main
+  repo-url: "https://github.com/amaiya/causalnlp/tree/main/"
