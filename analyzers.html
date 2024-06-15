@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Text analyzers to help create text-based covariates, treatments, or outcomes for causal analyses.">
+
+<title>causalnlp - Analyzers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="causalnlp - Analyzers">
+<meta property="og:description" content="Text analyzers to help create text-based covariates, treatments, or outcomes for causal analyses.">
+<meta property="og:site_name" content="causalnlp">
+<meta name="twitter:title" content="causalnlp - Analyzers">
+<meta name="twitter:description" content="Text analyzers to help create text-based covariates, treatments, or outcomes for causal analyses.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">causalnlp</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./analyzers.html">Analyzers</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to CausalNLP</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.causalinference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Causal Inference</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.causalbert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CausalBert</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocoder.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Auto Coder</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./analyzers.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Analyzers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./key_driver_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Driver Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.base.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Base Metalearner</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.tlearner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">T-Learner</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.slearner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">S-Learner</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.xlearner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">X-Learner</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.rlearner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R-Learner</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.utils.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metalearner Utils</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.explainer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metalearner Explainer</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.propensity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metalearner Propensity</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./meta.sensitivity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Metalearner Sensitivity</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#list2chunks" id="toc-list2chunks" class="nav-link active" data-scroll-target="#list2chunks">list2chunks</a></li>
+  <li><a href="#zeroshotclassifier" id="toc-zeroshotclassifier" class="nav-link" data-scroll-target="#zeroshotclassifier">ZeroShotClassifier</a></li>
+  <li><a href="#zeroshotclassifier.predict" id="toc-zeroshotclassifier.predict" class="nav-link" data-scroll-target="#zeroshotclassifier.predict">ZeroShotClassifier.predict</a></li>
+  <li><a href="#textencoder" id="toc-textencoder" class="nav-link" data-scroll-target="#textencoder">TextEncoder</a></li>
+  <li><a href="#topicmodel" id="toc-topicmodel" class="nav-link" data-scroll-target="#topicmodel">TopicModel</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/amaiya/causalnlp/tree/main/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analyzers</h1>
+</div>
+
+<div>
+  <div class="description">
+    Text analyzers to help create text-based covariates, treatments, or outcomes for causal analyses.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<hr>
+<p><a href="https://github.com/amaiya/causalnlp/tree/main/blob/main/causalnlp/analyzers.py#L12" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="list2chunks" class="level3">
+<h3 class="anchored" data-anchor-id="list2chunks">list2chunks</h3>
+<blockquote class="blockquote">
+<pre><code> list2chunks (a, n)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/amaiya/causalnlp/tree/main/blob/main/causalnlp/analyzers.py#L17" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="zeroshotclassifier" class="level3">
+<h3 class="anchored" data-anchor-id="zeroshotclassifier">ZeroShotClassifier</h3>
+<blockquote class="blockquote">
+<pre><code> ZeroShotClassifier (model_name='facebook/bart-large-mnli', device=None)</code></pre>
+</blockquote>
+<p><em>Interface to Zero Shot Topic Classifier</em></p>
+<hr>
+<p><a href="https://github.com/amaiya/causalnlp/tree/main/blob/main/causalnlp/analyzers.py#L43" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="zeroshotclassifier.predict" class="level3">
+<h3 class="anchored" data-anchor-id="zeroshotclassifier.predict">ZeroShotClassifier.predict</h3>
+<blockquote class="blockquote">
+<pre><code> ZeroShotClassifier.predict (docs, labels=[], include_labels=False,
+                             multilabel=True, max_length=512,
+                             batch_size=8, nli_template='This text is
+                             about {}.', topic_strings=[])</code></pre>
+</blockquote>
+<p>*This method performs zero-shot text classification using Natural Language Inference (NLI).</p>
+<p><strong>Parameters</strong>: - docs(list|str): text of document or list of texts - labels(list): a list of strings representing topics of your choice Example: labels=[‘political science’, ‘sports’, ‘science’] - include_labels(bool): If True, will return topic labels along with topic probabilities - multilabel(bool): If True, labels are considered independent and multiple labels can predicted true for document and be close to 1. If False, scores are normalized such that probabilities sum to 1. - max_length(int): truncate long documents to this many tokens - batch_size(int): batch_size to use. default:8 Increase this value to speed up predictions - especially if len(topic_strings) is large. - nli_template(str): labels are inserted into this template for use as hypotheses in natural language inference - topic_strings(list): alias for labels parameter for backwards compatibility</p>
+<p><strong>Returns:</strong></p>
+<p>inferred probabilities or list of inferred probabilities if doc is list*</p>
+<div id="05148cc7" class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>zsl <span class="op">=</span> ZeroShotClassifier()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>labels<span class="op">=</span>[<span class="st">'politics'</span>, <span class="st">'elections'</span>, <span class="st">'sports'</span>, <span class="st">'films'</span>, <span class="st">'television'</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> <span class="st">'I am extremely dissatisfied with the President and will definitely vote in 2020.'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>preds <span class="op">=</span> zsl.predict(doc, labels<span class="op">=</span>labels, include_labels<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="7ea2e002" class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>preds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[('politics', 0.9791897535324097),
+ ('elections', 0.9874581098556519),
+ ('sports', 0.0005765464738942683),
+ ('films', 0.002292431192472577),
+ ('television', 0.0010546175763010979)]</code></pre>
+</div>
+</div>
+<div id="d6e98953" class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> <span class="bu">dict</span>(preds)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> d[<span class="st">'politics'</span>] <span class="op">&gt;</span> <span class="fl">0.9</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> d[<span class="st">'elections'</span>] <span class="op">&gt;</span> <span class="fl">0.9</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> d[<span class="st">'sports'</span>] <span class="op">&lt;</span> <span class="fl">0.1</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> d[<span class="st">'films'</span>] <span class="op">&lt;</span> <span class="fl">0.1</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> d[<span class="st">'television'</span>] <span class="op">&lt;</span> <span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p><a href="https://github.com/amaiya/causalnlp/tree/main/blob/main/causalnlp/analyzers.py#L122" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="textencoder" class="level3">
+<h3 class="anchored" data-anchor-id="textencoder">TextEncoder</h3>
+<blockquote class="blockquote">
+<pre><code> TextEncoder (model_name='stsb-roberta-large', device=None)</code></pre>
+</blockquote>
+<p><em>Tiny wrapper to sentence-transformers</em></p>
+<div id="2f344ce4" class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>te <span class="op">=</span> TextEncoder()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/amaiya/mambaforge/envs/pt/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(</code></pre>
+</div>
+</div>
+<div id="92b53226" class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> te.encode(<span class="st">'The moon is bright.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="054c64d1" class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> e.shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">1</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> e.shape[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">1024</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p><a href="https://github.com/amaiya/causalnlp/tree/main/blob/main/causalnlp/analyzers.py#L163" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="topicmodel" class="level3">
+<h3 class="anchored" data-anchor-id="topicmodel">TopicModel</h3>
+<blockquote class="blockquote">
+<pre><code> TopicModel (texts=None, n_topics=None, n_features=10000, min_df=5,
+             max_df=0.5, stop_words='english', model_type='lda',
+             lda_max_iter=5, lda_mode='online', token_pattern=None,
+             verbose=1, hyperparam_kwargs=None)</code></pre>
+</blockquote>
+<p><em>Fits a topic model to documents in <texts>. Example: tm = ktrain.text.get_topic_model(docs, n_topics=20, n_features=1000, min_df=2, max_df=0.95) Args: texts (list of str): list of texts n_topics (int): number of topics. If None, n_topics = min{400, sqrt[# documents/2]}) n_features (int): maximum words to consider max_df (float): words in more than max_df proportion of docs discarded stop_words (str or list): either ‘english’ for built-in stop words or a list of stop words to ignore model_type(str): type of topic model to fit. One of {‘lda’, ‘nmf’}. Default:‘lda’ lda_max_iter (int): maximum iterations for ‘lda’. 5 is default if using lda_mode=‘online’. If lda_mode=‘batch’, this should be increased (e.g., 1500). Ignored if model_type != ‘lda’ lda_mode (str): one of {‘online’, ‘batch’}. Ignored if model_type !=‘lda’ token_pattern(str): regex pattern to use to tokenize documents. verbose(bool): verbosity</texts></em></p>
+<div id="b403f9ca-b35d-4add-a714-73ba575271a7" class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_20newsgroups</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ea1862b7" class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we only want to keep the body of the documents!</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>remove <span class="op">=</span> (<span class="st">'headers'</span>, <span class="st">'footers'</span>, <span class="st">'quotes'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fetch train and test data</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>newsgroups_train <span class="op">=</span> fetch_20newsgroups(subset<span class="op">=</span><span class="st">'train'</span>, remove<span class="op">=</span>remove)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>newsgroups_test <span class="op">=</span> fetch_20newsgroups(subset<span class="op">=</span><span class="st">'test'</span>, remove<span class="op">=</span>remove)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># compile the texts</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>texts <span class="op">=</span> newsgroups_train.data <span class="op">+</span>  newsgroups_test.data</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># let's also store the newsgroup category associated with each document</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># we can display this information in visualizations</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>targets <span class="op">=</span> [target <span class="cf">for</span> target <span class="kw">in</span> <span class="bu">list</span>(newsgroups_train.target) <span class="op">+</span> <span class="bu">list</span>(newsgroups_test.target)]</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>categories <span class="op">=</span> [newsgroups_train.target_names[target] <span class="cf">for</span> target <span class="kw">in</span> targets]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="56986201" class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tm <span class="op">=</span> TopicModel(texts, n_features<span class="op">=</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>n_topics automatically set to 97
+preprocessing texts...
+fitting model...
+iteration: 1 of max_iter: 5
+iteration: 2 of max_iter: 5
+iteration: 3 of max_iter: 5
+iteration: 4 of max_iter: 5
+iteration: 5 of max_iter: 5
+done.</code></pre>
+</div>
+</div>
+<div id="20b2a6f0" class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tm.print_topics()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>topic 0 | tape adam tim case moved bag quote mass marked zionism
+topic 1 | image jpeg images format programs tiff files jfif save lossless
+topic 2 | alternative movie film static cycles films philips dynamic hou phi
+topic 3 | hell humans poster frank reality kent gerard gant eternal bell
+topic 4 | air phd chz kit cbc ups w-s rus w47 mot
+topic 5 | dog math great figure poster couldn don trying rushdie fatwa
+topic 6 | collaboration nazi fact end expression germany philly world certified moore
+topic 7 | gif points scale postscript mirror plane rendering algorithm polygon rayshade
+topic 8 | fonts font shell converted iii characters slight composite breaks compress
+topic 9 | power station supply options option led light tank plastic wall
+topic 10 | transmission rider bmw driver automatic shift gear japanese stick highway
+topic 11 | tyre ezekiel ruler hernia appeared appointed supreme man land power
+topic 12 | space nasa earth data launch surface solar moon mission planet
+topic 13 | israel jews jewish israeli arab peace war arabs palestinian kuwait
+topic 14 | olvwm xremote animals kinds roughing toolkit close corp glenn imakefile
+topic 15 | medical health disease cancer patients drug treatment drugs aids study
+topic 16 | biden chip gear like information number automatic mode insurance know
+topic 17 | graphics zip amiga shareware formats ftp gif program sgi convert
+topic 18 | brilliant mail did god coming christianity people got ideas reading
+topic 19 | black red white blue green cross wires lines helmet mask
+topic 20 | car engine cars miles clutch new ford rear slip road
+topic 21 | list mailing service model small large lists radar available major
+topic 22 | key encryption chip keys clipper phone security use government privacy
+topic 23 | talking pit nyr stl phi edm mtl wsh hfd cgy
+topic 24 | signal input switch connected circuit audio noise output control voltage
+topic 25 | stuff deleted die posting beware fantastic motives authentic reluctant hope
+topic 26 | adams douglas dc-x garrett ingres tin sdio incremental mcdonnell guide
+topic 27 | men homosexual homosexuality women gay sexual homosexuals male kinsey pop
+topic 28 | usual leo rs-232 martian reading cooperative unmanned somalia decompress visited
+topic 29 | edu university information send new computer research mail internet address
+topic 30 | reserve naval marine ret commission one-way irgun prior closure facilities
+topic 31 | state intelligence militia units army zone georgia sam croats belongs
+topic 32 | says article pain known warning doctor stone bug kidney response
+topic 33 | faq rsa ripem lights yes patent nist management wax cipher
+topic 34 | wolverine comics hulk appearance special liefeld sabretooth incredible hobgoblin x-force
+topic 35 | software ram worth cycles controller available make dram dynamic situation
+topic 36 | religion people religious catalog bobby used driven involved long like
+topic 37 | intel sites experiment ftp does know family good like mrs
+topic 38 | armenian people army russian turkish genocide armenians ottoman turks jews
+topic 39 | theft geo available face couldn cover sony people number shop
+topic 40 | christianity did exists mail matter mind tool status god reading
+topic 41 | propane probe earth orbit orbiter titan cassini space atmosphere gravity
+topic 42 | people government right think rights law make public fbi don
+topic 43 | god people does say believe bible true think evidence religion
+topic 44 | mov phone south key war supply push left just registered
+topic 45 | period goal pts play chicago pittsburgh buffalo shots new blues
+topic 46 | game team games year hockey season players player baseball league
+topic 47 | speed dod student technician just hits right note giant light
+topic 48 | sex marriage relationship family married couple depression pregnancy childhood trademark
+topic 49 | protects rejecting com4 couple decides taking connect unc nearest richer
+topic 50 | president states united american national press april washington america white
+topic 51 | card memory windows board ram bus drivers driver cpu problem
+topic 52 | window application manager display button xterm path widget event resources
+topic 53 | cable win van det bos tor cal nyi chi buf
+topic 54 | americans baltimore rochester cape springfield moncton providence utica binghamton adirondack
+topic 55 | color monitor screen mouse video colors resolution vga colour monitors
+topic 56 | option power ssf flights capability module redesign missions station options
+topic 57 | body father son vitamin diet day cells cell form literature
+topic 58 | max g9v b8f a86 bhj giz bxn biz qax b4q
+topic 59 | bit fast chip ibm faster mode chips scsi-2 speeds quadra
+topic 60 | book books law adl islam islamic iran media bullock muslims
+topic 61 | armenian russian turkish ottoman people army armenians genocide war turks
+topic 62 | oscillator partition tune nun umumiye nezareti mecmuasi muharrerat-i evrak version
+topic 63 | tongues seat est didn raise copied lazy schemes adapter leap
+topic 64 | com object jim app function motorola heterosexual objects pointers encountered
+topic 65 | effective boy projects grow jason ain dump keyboards vastly grants
+topic 66 | armenian people russian armenians turks ottoman army turkish genocide muslim
+topic 67 | mac apple pin ground wire quicktime macs pins connector simms
+topic 68 | bastard turning likes hooks notions turks cited proud pointers chuck
+topic 69 | bought dealer cost channel replaced face sony stereo warranty tube
+topic 70 | myers food reaction msg writes loop eat dee effects taste
+topic 71 | lander contradiction reconcile apparent somebody supplement essential needs produce insulin
+topic 72 | re-boost systems virginia voice unix input ken easily summary developing
+topic 73 | block tests suck shadow dte screws macedonia sunlight fin message
+topic 74 | jesus church christ god lord holy spirit mary shall heaven
+topic 75 | gun number year guns rate insurance police years new firearms
+topic 76 | rule automatically characteristic wider thumb recommendation inline mr2 halfway width
+topic 77 | drive disk hard scsi drives controller floppy ide master transfer
+topic 78 | stephanopoulos water gas oil heat energy hot temperature cold nuclear
+topic 79 | like know does use don just good thanks need want
+topic 80 | starters mlb mov higher signing left accessible argument viola teams
+topic 81 | entry rules info define entries year int printf include contest
+topic 82 | price new sale offer sell condition shipping interested asking prices
+topic 83 | issue germany title magazine german cover race generation origin nazi
+topic 84 | armenian armenians people turkish war said killed children russian turkey
+topic 85 | dos windows software comp library os/2 version microsoft applications code
+topic 86 | probe space launch titan earth cassini orbiter orbit atmosphere mission
+topic 87 | housed throws fills daylight occurring activities adjacent presenting punish occuring
+topic 88 | statement folk raids thor disarmed anatolia polygon inria arrive smehlik
+topic 89 | sound steve pro convert ati ultra fahrenheit orchid hercules blaster
+topic 90 | joke tricky wearing golden trickle seen geneva csh course caesar
+topic 91 | moral objective values morality child defined bank definition wrong different
+topic 92 | files file edu ftp available version server data use sun
+topic 93 | catalog tons seal ordering kawasaki tools fax free ultraviolet packages
+topic 94 | file program error output use section line code command problem
+topic 95 | power ssf module capability option flights redesign missions human station
+topic 96 | just don think know like time did going didn people</code></pre>
+</div>
+</div>
+<div id="75cb5fd7" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>tm.build(texts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>done.</code></pre>
+</div>
+</div>
+<div id="f2310aaf" class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>texts[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>"A fair number of brave souls who upgraded their SI clock oscillator have\nshared their experiences for this poll. Please send a brief message detailing\nyour experiences with the procedure. Top speed attained, CPU rated speed,\nadd on cards and adapters, heat sinks, hour of usage per day, floppy disk\nfunctionality with 800 and 1.4 m floppies are especially requested.\n\nI will be summarizing in the next two days, so please add to the network\nknowledge base if you have done the clock upgrade and haven't answered this\npoll. Thanks."</code></pre>
+</div>
+</div>
+<div id="502d2975" class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tm.doc_topics[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>array([0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.05935853, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.04939132, 0.00105197,
+       0.00105197, 0.00105197, 0.04181867, 0.00105197, 0.00105197,
+       0.00105197, 0.21681858, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.02146013, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.0458702 , 0.02146013, 0.14892628,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.00105197, 0.00105197, 0.00105197,
+       0.00105197, 0.00105197, 0.13724779, 0.00105197, 0.00105197,
+       0.00105197, 0.16612722])</code></pre>
+</div>
+</div>
+<div id="35df1975" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tm.topics[ np.argmax(tm.doc_topics[<span class="dv">1</span>])]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'card memory windows board ram bus drivers driver cpu problem'</code></pre>
+</div>
+</div>
+<div id="942e9ddc" class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tm.predict([<span class="st">'Elon Musk leads Space Exploration Technologies (SpaceX), where he oversees '</span>  <span class="op">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">'the development and manufacturing of advanced rockets and spacecraft for missions '</span> <span class="op">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">'to and beyond Earth orbit.'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>array([[0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.65009096, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.06185567, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214, 0.00303214, 0.00303214, 0.00303214,
+        0.00303214, 0.00303214]])</code></pre>
+</div>
+</div>
+<div id="01571573" class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tm.topics[ np.argmax(tm.predict([<span class="st">'Elon Musk leads Space Exploration Technologies (SpaceX), where he oversees '</span>  <span class="op">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">'the development and manufacturing of advanced rockets and spacecraft for missions '</span> <span class="op">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">'to and beyond Earth orbit.'</span>]))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'space nasa earth data launch surface solar moon mission planet'</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/amaiya\.github\.io\/causalnlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/amaiya/causalnlp/tree/main/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
