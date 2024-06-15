@@ -144,7 +144,7 @@ class DataframePreprocessor:
                 v_features = self.tv.fit_transform(df[self.text_col])
             else:
                 v_features = self.tv.transform(df[self.text_col])
-            vocab = self.tv.get_feature_names()
+            vocab = self.tv.get_feature_names_out()
             vocab_df = pd.DataFrame(v_features.toarray(), columns = ["v_%s" % (v) for v in vocab])
             X = pd.concat([X, vocab_df], axis=1, join='inner')
         outcome_type = 'categorical' if self.is_classification else 'numerical'

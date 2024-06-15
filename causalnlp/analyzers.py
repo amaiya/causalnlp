@@ -333,7 +333,7 @@ class TopicModel():
         Returns a list of discovered topics
         """
         self._check_model()
-        feature_names = self.vectorizer.get_feature_names()
+        feature_names = self.vectorizer.get_feature_names_out()
         topic_summaries = []
         for topic_idx, topic in enumerate(self.model.components_):
             summary = [feature_names[i] for i in topic.argsort()[:-n_words - 1:-1]]
